@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src\Fulcrum.Conductor.Cli\Fulcrum.Conductor.Cli.csproj" />
+  <Project Path="src\Fulcrum.Conductor.Core\Fulcrum.Conductor.Core.csproj" />
+  <Project Path="src\Fulcrum.Conductor.Jinja\Fulcrum.Conductor.Jinja.csproj" />
+  <Project Path="test\Fulcrum.Conductor.Jinja.Tests\Fulcrum.Conductor.Jinja.Tests.csproj" />
+  <Project Path="test\Fulcrume.Conductor.Core.Tests\Fulcrume.Conductor.Core.Tests.csproj" />
+</Solution>
