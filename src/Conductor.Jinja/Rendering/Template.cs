@@ -1,3 +1,4 @@
+using Conductor.Jinja.Filters;
 using Conductor.Jinja.Lexing;
 using Conductor.Jinja.Parsing;
 using Conductor.Jinja.Parsing.Nodes;
@@ -9,17 +10,19 @@ namespace Conductor.Jinja.Rendering;
 /// </summary>
 public sealed class Template
 {
+    private readonly FilterRegistry _filterRegistry;
     private readonly IList<IStatement> _statements;
 
-    private Template(IList<IStatement> statements)
+    private Template(IList<IStatement> statements, FilterRegistry? filterRegistry = null)
     {
         _statements = statements;
+        _filterRegistry = filterRegistry ?? FilterRegistry.CreateDefault();
     }
 
     /// <summary>
     ///     Parses a template string.
     /// </summary>
-    public static Template Parse(string templateText)
+    public static Template Parse(string templateText, FilterRegistry? filterRegistry = null)
     {
         Lexer lexer = new();
         IList<Token> tokens = lexer.Tokenize(templateText);
@@ -27,7 +30,7 @@ public sealed class Template
         Parser parser = new();
         IList<IStatement> statements = parser.Parse(tokens);
 
-        return new Template(statements);
+        return new Template(statements, filterRegistry);
     }
 
     /// <summary>
@@ -44,7 +47,7 @@ public sealed class Template
     /// </summary>
     public string Render(TemplateContext context)
     {
-        Renderer renderer = new();
+        Renderer renderer = new(_filterRegistry);
         return renderer.Render(_statements, context);
     }
 }
