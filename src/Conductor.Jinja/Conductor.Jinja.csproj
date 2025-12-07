@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Conductor.Jinja2</RootNamespace>
+    <RootNamespace>Conductor.Jinja</RootNamespace>
   </PropertyGroup>
 
 </Project>
