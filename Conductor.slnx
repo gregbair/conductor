@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/Conductor.Cli/Conductor.Cli.csproj" />
+  <Project Path="src/Conductor.Core/Conductor.Core.csproj" />
+  <Project Path="src\Conductor.Jinja\Conductor.Jinja.csproj" />
+  <Project Path="test/Conductor.Core.Tests/Conductor.Core.Tests.csproj" />
+  <Project Path="test/Conductor.Jinja.Tests/Conductor.Jinja.Tests.csproj" />
+</Solution>
