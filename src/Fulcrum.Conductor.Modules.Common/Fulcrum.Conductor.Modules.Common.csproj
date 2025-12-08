@@ -4,6 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Common interfaces and base classes for building Fulcrum.Conductor modules. Use this library to create custom automation modules compatible with the Conductor orchestration engine.</Description>
+    <PackageId>Fulcrum.Conductor.Modules.Common</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

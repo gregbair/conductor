@@ -1,10 +1,16 @@
 namespace Fulcrum.Conductor.Jinja.Parsing.Nodes.Expressions;
 
 /// <summary>
-///     Represents a binary operation (e.g., +, -, ==, !=, <, >, and, or).
+///     Represents a binary operation (e.g., +, -, ==, !=, &lt;, &gt;, and, or).
 /// </summary>
 public sealed class BinaryExpression : IExpression
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="BinaryExpression"/> class.
+    /// </summary>
+    /// <param name="left">The left operand of the binary operation.</param>
+    /// <param name="operatorType">The binary operator.</param>
+    /// <param name="right">The right operand of the binary operation.</param>
     public BinaryExpression(IExpression left, BinaryOperator operatorType, IExpression right)
     {
         Left = left;

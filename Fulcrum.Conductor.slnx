@@ -1,9 +1,19 @@
 <Solution>
+  <Folder Name="/CLI/">
+    <Project Path="src\Fulcrum.Conductor.Cli\Fulcrum.Conductor.Cli.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="src\Fulcrum.Conductor.Core\Fulcrum.Conductor.Core.csproj" />
+    <Project Path="test\Fulcrum.Conductor.Core.Tests\Fulcrum.Conductor.Core.Tests.csproj" />
+  </Folder>
   <Folder Name="/Docs/">
     <File Path="docs\module-system.md" />
     <File Path="docs\process-based-modules.md" />
   </Folder>
-  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/">
+    <Project Path="src\Fulcrum.Conductor.Modules.Common\Fulcrum.Conductor.Modules.Common.csproj" />
+    <Project Path="test/Fulcrum.Conductor.Modules.Common.Tests/Fulcrum.Conductor.Modules.Common.Tests.csproj" />
+  </Folder>
   <Folder Name="/Modules/Debug/">
     <Project Path="modules/src/Fulcrum.Conductor.Modules.Debug/Fulcrum.Conductor.Modules.Debug.csproj" />
     <Project Path="modules/test/Fulcrum.Conductor.Modules.Debug.Tests/Fulcrum.Conductor.Modules.Debug.Tests.csproj" />
@@ -12,11 +22,15 @@
     <Project Path="modules/src/Fulcrum.Conductor.Modules.Shell/Fulcrum.Conductor.Modules.Shell.csproj" />
     <Project Path="modules/test/Fulcrum.Conductor.Modules.Shell.Tests/Fulcrum.Conductor.Modules.Shell.Tests.csproj" />
   </Folder>
-  <Project Path="src\Fulcrum.Conductor.Cli\Fulcrum.Conductor.Cli.csproj" />
-  <Project Path="src\Fulcrum.Conductor.Core\Fulcrum.Conductor.Core.csproj" />
-  <Project Path="src\Fulcrum.Conductor.Jinja\Fulcrum.Conductor.Jinja.csproj" />
-  <Project Path="src\Fulcrum.Conductor.Modules.Common\Fulcrum.Conductor.Modules.Common.csproj" />
-  <Project Path="test/Fulcrum.Conductor.Modules.Common.Tests/Fulcrum.Conductor.Modules.Common.Tests.csproj" />
-  <Project Path="test\Fulcrum.Conductor.Core.Tests\Fulcrum.Conductor.Core.Tests.csproj" />
-  <Project Path="test\Fulcrum.Conductor.Jinja.Tests\Fulcrum.Conductor.Jinja.Tests.csproj" />
+  <Folder Name="/Solution Items/">
+    <File Path=".github\workflows\build-and-publish.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Templating/">
+    <Project Path="src\Fulcrum.Conductor.Jinja\Fulcrum.Conductor.Jinja.csproj" />
+    <Project Path="test\Fulcrum.Conductor.Jinja.Tests\Fulcrum.Conductor.Jinja.Tests.csproj" />
+  </Folder>
 </Solution>

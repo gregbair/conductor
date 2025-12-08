@@ -4,10 +4,12 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Core library for Fulcrum.Conductor, an Ansible-compatible orchestration and automation engine for .NET. Includes task execution, playbook parsing, templating, conditionals, and loops.</Description>
+    <PackageId>Fulcrum.Conductor.Core</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="YamlDotNet" Version="16.2.0" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
 
   <ItemGroup>

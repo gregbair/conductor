@@ -7,6 +7,10 @@ namespace Fulcrum.Conductor.Jinja.Filters;
 /// </summary>
 public sealed class FilterContext
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="FilterContext"/> class.
+    /// </summary>
+    /// <param name="templateContext">The template context containing variables and rendering state.</param>
     public FilterContext(TemplateContext templateContext)
     {
         TemplateContext = templateContext;
