@@ -5,6 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <AssemblyName>conductor-module-debug</AssemblyName>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
