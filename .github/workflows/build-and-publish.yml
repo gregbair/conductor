@@ -2,10 +2,10 @@ name: Build, Test, and Publish
 
 on:
   push:
-    branches: [main]
-    tags: ['v*']
+    branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
 
 env:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, macos-latest ] # Restore windows-latest when I can get access to a windows machine :)
       fail-fast: false
 
     steps:
