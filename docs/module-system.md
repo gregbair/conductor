@@ -58,7 +58,7 @@ Modules output JSON results via stdout:
 ### 1. Register Modules
 
 ```csharp
-using Fulcrum.Conductor.Core.Modules;
+using FulcrumLabs.Conductor.Core.Modules;
 
 var registry = new ModuleRegistry();
 
@@ -92,8 +92,8 @@ Console.WriteLine($"Message: {result.Message}");
 ### Option 1: Using ModuleBase (C#)
 
 ```csharp
-using Fulcrum.Conductor.Core.Modules;
-using Fulcrum.Conductor.Modules.Common;
+using FulcrumLabs.Conductor.Core.Modules;
+using FulcrumLabs.Conductor.Modules.Common;
 
 public class MyModule : ModuleBase
 {
@@ -215,7 +215,7 @@ var result = await executor.ExecuteAsync("shell", new Dictionary<string, object?
 
 ```
 src/
-  Fulcrum.Conductor.Core/
+  FulcrumLabs.Conductor.Core/
     Modules/
       ModuleRegistry.cs      - Discovers and manages modules
       ModuleExecutor.cs      - Executes modules via process spawning
@@ -223,13 +223,13 @@ src/
       ModuleNotFoundException.cs
       ModuleExecutionException.cs
 
-  Fulcrum.Conductor.Modules.Common/
+  FulcrumLabs.Conductor.Modules.Common/
     ModuleBase.cs           - Base class for C# modules
     IModuleAttributes.cs    - Module metadata interface
 
 modules/
   src/
-    Fulcrum.Conductor.Modules.Shell/
+    FulcrumLabs.Conductor.Modules.Shell/
       ShellModule.cs        - Shell command module implementation
       Program.cs            - Entry point
 ```

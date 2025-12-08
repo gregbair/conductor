@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>Common interfaces and base classes for building Fulcrum.Conductor modules. Use this library to create custom automation modules compatible with the Conductor orchestration engine.</Description>
+    <PackageId>FulcrumLabs.Conductor.Modules.Common</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FulcrumLabs.Conductor.Core\FulcrumLabs.Conductor.Core.csproj" />
+  </ItemGroup>
+
+</Project>
