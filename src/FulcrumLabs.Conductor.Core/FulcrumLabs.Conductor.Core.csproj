@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>Core library for Fulcrum.Conductor, an Ansible-compatible orchestration and automation engine for .NET. Includes task execution, playbook parsing, templating, conditionals, and loops.</Description>
+    <PackageId>FulcrumLabs.Conductor.Core</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FulcrumLabs.Conductor.Jinja\FulcrumLabs.Conductor.Jinja.csproj" />
+  </ItemGroup>
+
+</Project>

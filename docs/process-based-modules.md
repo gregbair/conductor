@@ -36,8 +36,8 @@ This is exactly how Ansible works.
 ## Core Implementation
 
 ```csharp
-// Fulcrum.Conductor.Core/Modules/ModuleExecutor.cs
-namespace Fulcrum.Conductor.Core.Modules;
+// FulcrumLabs.Conductor.Core/Modules/ModuleExecutor.cs
+namespace FulcrumLabs.Conductor.Core.Modules;
 
 public class ModuleExecutor
 {
@@ -101,7 +101,7 @@ public class ModuleExecutor
     }
 }
 
-// Fulcrum.Conductor.Core/Modules/ModuleRegistry.cs
+// FulcrumLabs.Conductor.Core/Modules/ModuleRegistry.cs
 public class ModuleRegistry
 {
     private readonly Dictionary<string, string> _modulePaths = new();
@@ -291,7 +291,7 @@ static void Error(string message)
 ## Usage in CLI
 
 ```csharp
-// Fulcrum.Conductor.Cli/Program.cs
+// FulcrumLabs.Conductor.Cli/Program.cs
 var registry = new ModuleRegistry();
 
 // Discover modules from standard locations
@@ -347,7 +347,7 @@ Examples:
 You could provide a base library for C# module authors:
 
 ```csharp
-// Fulcrum.Conductor.ModuleSDK (NuGet package)
+// FulcrumLabs.Conductor.ModuleSDK (NuGet package)
 public abstract class ModuleBase
 {
     public async Task<int> RunAsync()
