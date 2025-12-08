@@ -5,7 +5,6 @@ using Fulcrum.Conductor.Core.Modules;
 using Fulcrum.Conductor.Core.Playbooks;
 using Fulcrum.Conductor.Core.Templating;
 using Fulcrum.Conductor.Core.Yaml;
-using Fulcrum.Conductor.Jinja.Rendering;
 
 namespace Fulcrum.Conductor.Core.Tests.Integration;
 
@@ -16,14 +15,14 @@ public class PlaybookExecutionTests
     {
         // Setup
         string yaml = """
-            - name: Test playbook
-              vars:
-                greeting: "Hello"
-              tasks:
-                - name: Print greeting
-                  debug:
-                    msg: "{{ greeting }} World"
-            """;
+                      - name: Test playbook
+                        vars:
+                          greeting: "Hello"
+                        tasks:
+                          - name: Print greeting
+                            debug:
+                              msg: "{{ greeting }} World"
+                      """;
 
         // Load playbook
         PlaybookLoader loader = new();
@@ -33,7 +32,11 @@ public class PlaybookExecutionTests
         ModuleRegistry registry = new();
 
         // Manually register debug module with its actual path
-        string debugModulePath = Path.GetFullPath("../../../../../modules/src/Fulcrum.Conductor.Modules.Debug/bin/Debug/net10.0/conductor-module-debug");
+        string testDir = AppContext.BaseDirectory;
+        string configuration = testDir.Contains("/Release/") || testDir.Contains("\\Release\\") ? "Release" : "Debug";
+        string debugModulePath =
+            Path.GetFullPath(
+                $"../../../../../modules/src/Fulcrum.Conductor.Modules.Debug/bin/{configuration}/net10.0/conductor-module-debug");
         if (File.Exists(debugModulePath))
         {
             registry.RegisterModule("debug", debugModulePath);
@@ -63,16 +66,16 @@ public class PlaybookExecutionTests
     public async Task ExecutePlaybook_WithLoop_ExecutesMultipleIterations()
     {
         string yaml = """
-            - name: Test loop
-              tasks:
-                - name: Loop over items
-                  debug:
-                    msg: "Item: {{ item }}"
-                  loop:
-                    - one
-                    - two
-                    - three
-            """;
+                      - name: Test loop
+                        tasks:
+                          - name: Loop over items
+                            debug:
+                              msg: "Item: {{ item }}"
+                            loop:
+                              - one
+                              - two
+                              - three
+                      """;
 
         PlaybookLoader loader = new();
         Playbook playbook = loader.LoadFromString(yaml);
@@ -80,7 +83,11 @@ public class PlaybookExecutionTests
         ModuleRegistry registry = new();
 
         // Manually register debug module
-        string debugModulePath = Path.GetFullPath("../../../../../modules/src/Fulcrum.Conductor.Modules.Debug/bin/Debug/net10.0/conductor-module-debug");
+        string testDir = AppContext.BaseDirectory;
+        string configuration = testDir.Contains("/Release/") || testDir.Contains("\\Release\\") ? "Release" : "Debug";
+        string debugModulePath =
+            Path.GetFullPath(
+                $"../../../../../modules/src/Fulcrum.Conductor.Modules.Debug/bin/{configuration}/net10.0/conductor-module-debug");
         if (File.Exists(debugModulePath))
         {
             registry.RegisterModule("debug", debugModulePath);
@@ -109,18 +116,18 @@ public class PlaybookExecutionTests
     public async Task ExecutePlaybook_WithConditional_SkipsWhenFalse()
     {
         string yaml = """
-            - name: Test conditional
-              vars:
-                should_run: false
-              tasks:
-                - name: Skipped task
-                  debug:
-                    msg: "This should be skipped"
-                  when: should_run
-                - name: Running task
-                  debug:
-                    msg: "This should run"
-            """;
+                      - name: Test conditional
+                        vars:
+                          should_run: false
+                        tasks:
+                          - name: Skipped task
+                            debug:
+                              msg: "This should be skipped"
+                            when: should_run
+                          - name: Running task
+                            debug:
+                              msg: "This should run"
+                      """;
 
         PlaybookLoader loader = new();
         Playbook playbook = loader.LoadFromString(yaml);
@@ -128,7 +135,11 @@ public class PlaybookExecutionTests
         ModuleRegistry registry = new();
 
         // Manually register debug module
-        string debugModulePath = Path.GetFullPath("../../../../../modules/src/Fulcrum.Conductor.Modules.Debug/bin/Debug/net10.0/conductor-module-debug");
+        string testDir = AppContext.BaseDirectory;
+        string configuration = testDir.Contains("/Release/") || testDir.Contains("\\Release\\") ? "Release" : "Debug";
+        string debugModulePath =
+            Path.GetFullPath(
+                $"../../../../../modules/src/Fulcrum.Conductor.Modules.Debug/bin/{configuration}/net10.0/conductor-module-debug");
         if (File.Exists(debugModulePath))
         {
             registry.RegisterModule("debug", debugModulePath);
