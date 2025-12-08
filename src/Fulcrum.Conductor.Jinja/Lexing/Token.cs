@@ -23,15 +23,19 @@ public readonly struct Token(TokenType type, string value, Position position)
     public Position Position { get; init; } = position;
 
     /// <summary>
-    ///     Initializes a new instance of <see cref="Token" />
+    ///     Initializes a new instance of the <see cref="Token"/> struct.
     /// </summary>
-    /// <param name="type"></param>
-    /// <param name="position"></param>
+    /// <param name="type">The type of the token.</param>
+    /// <param name="position">The position of the token in the source template.</param>
     public Token(TokenType type, Position position)
         : this(type, string.Empty, position)
     {
     }
 
+    /// <summary>
+    ///     Returns a string representation of the token.
+    /// </summary>
+    /// <returns>A string that represents the current token.</returns>
     public override string ToString()
     {
         return !string.IsNullOrEmpty(Value) ? $"{Type}('{Value}')" : Type.ToString();

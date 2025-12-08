@@ -15,9 +15,16 @@ public class ShellModuleTests
         // This avoids Console redirection issues
 
         // Navigate from test bin directory to module bin directory
+        // Detect the build configuration from the test binary path
         var testDir = AppContext.BaseDirectory;
-        var modulePath = Path.Combine(testDir, "../../../../../src/Fulcrum.Conductor.Modules.Shell/bin/Debug/net10.0/conductor-module-shell.dll");
+        var configuration = testDir.Contains("/Release/") || testDir.Contains("\\Release\\") ? "Release" : "Debug";
+        var modulePath = Path.Combine(testDir, $"../../../../../src/Fulcrum.Conductor.Modules.Shell/bin/{configuration}/net10.0/conductor-module-shell.dll");
         modulePath = Path.GetFullPath(modulePath);
+
+        if (!File.Exists(modulePath))
+        {
+            throw new Exception($"Module not found at: {modulePath}. Test directory: {testDir}");
+        }
 
         var inputJson = JsonSerializer.Serialize(vars);
 
