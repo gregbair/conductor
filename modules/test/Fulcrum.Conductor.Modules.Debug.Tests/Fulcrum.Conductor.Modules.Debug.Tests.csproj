@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Fulcrum.Conductor.Core\Fulcrum.Conductor.Core.csproj"/>
+    <ProjectReference Include="..\..\src\Fulcrum.Conductor.Modules.Debug\Fulcrum.Conductor.Modules.Debug.csproj"/>
   </ItemGroup>
 
 </Project>
