@@ -7,8 +7,10 @@ namespace FulcrumLabs.Conductor.Jinja.Filters.Ansible;
 /// </summary>
 public sealed class FromJsonFilter : IFilter
 {
+    /// <inheritdoc />
     public string Name => "from_json";
 
+    /// <inheritdoc />
     public object? Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (value == null)

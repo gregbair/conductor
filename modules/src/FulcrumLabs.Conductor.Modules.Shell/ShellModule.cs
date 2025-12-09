@@ -14,6 +14,7 @@ namespace FulcrumLabs.Conductor.Modules.Shell;
 /// </summary>
 public class ShellModule : ModuleBase
 {
+    /// <inheritdoc />
     protected override async Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars)
     {
         // Get the command to execute

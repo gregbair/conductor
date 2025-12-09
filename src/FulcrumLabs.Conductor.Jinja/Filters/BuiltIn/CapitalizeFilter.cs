@@ -7,8 +7,10 @@ namespace FulcrumLabs.Conductor.Jinja.Filters.BuiltIn;
 /// </summary>
 public sealed class CapitalizeFilter : IFilter
 {
+    /// <inheritdoc />
     public string Name => "capitalize";
 
+    /// <inheritdoc />
     public object? Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (value == null)

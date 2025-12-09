@@ -5,8 +5,10 @@ namespace FulcrumLabs.Conductor.Jinja.Filters.BuiltIn;
 /// </summary>
 public sealed class DefaultFilter : IFilter
 {
+    /// <inheritdoc />
     public string Name => "default";
 
+    /// <inheritdoc />
     public object? Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (arguments.Length == 0)

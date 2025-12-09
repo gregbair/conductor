@@ -5,6 +5,10 @@ namespace FulcrumLabs.Conductor.Jinja.Parsing.Nodes.Statements;
 /// </summary>
 public sealed class OutputStatement : IStatement
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="OutputStatement"/> class.
+    /// </summary>
+    /// <param name="expression">The expression to evaluate and output.</param>
     public OutputStatement(IExpression expression)
     {
         Expression = expression;

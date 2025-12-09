@@ -22,6 +22,7 @@ public sealed class TaskExecutor(
     ILoopExpander loopExpander)
     : ITaskExecutor
 {
+    /// <inheritdoc />
     public async Task<TaskResult> ExecuteAsync(Tasks_Task task, TemplateContext context, CancellationToken cancellationToken)
     {
         try

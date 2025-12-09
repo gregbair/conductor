@@ -12,6 +12,7 @@ public sealed class TemplateExpander(FilterRegistry? filterRegistry = null) : IT
 {
     private readonly FilterRegistry _filterRegistry = filterRegistry ?? FilterRegistry.CreateDefault();
 
+    /// <inheritdoc />
     public Dictionary<string, object?> ExpandParameters(Dictionary<string, object?> parameters, TemplateContext context)
     {
         Dictionary<string, object?> expanded = new();
@@ -24,6 +25,7 @@ public sealed class TemplateExpander(FilterRegistry? filterRegistry = null) : IT
         return expanded;
     }
 
+    /// <inheritdoc />
     public string ExpandString(string template, TemplateContext context)
     {
         if (string.IsNullOrEmpty(template))
@@ -48,6 +50,7 @@ public sealed class TemplateExpander(FilterRegistry? filterRegistry = null) : IT
         }
     }
 
+    /// <inheritdoc />
     public object? EvaluateExpression(string expression, TemplateContext context)
     {
         if (string.IsNullOrWhiteSpace(expression))
@@ -133,10 +136,19 @@ public sealed class TemplateExpander(FilterRegistry? filterRegistry = null) : IT
 /// </summary>
 public sealed class TemplateExpansionException : Exception
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TemplateExpansionException"/> class with a specified error message.
+    /// </summary>
+    /// <param name="message">The message that describes the error.</param>
     public TemplateExpansionException(string message) : base(message)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TemplateExpansionException"/> class with a specified error message and inner exception.
+    /// </summary>
+    /// <param name="message">The message that describes the error.</param>
+    /// <param name="innerException">The exception that is the cause of the current exception.</param>
     public TemplateExpansionException(string message, Exception innerException) : base(message, innerException)
     {
     }

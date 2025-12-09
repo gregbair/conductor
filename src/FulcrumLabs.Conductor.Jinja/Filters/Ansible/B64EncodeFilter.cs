@@ -7,8 +7,10 @@ namespace FulcrumLabs.Conductor.Jinja.Filters.Ansible;
 /// </summary>
 public sealed class B64EncodeFilter : IFilter
 {
+    /// <inheritdoc />
     public string Name => "b64encode";
 
+    /// <inheritdoc />
     public object? Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (value == null)

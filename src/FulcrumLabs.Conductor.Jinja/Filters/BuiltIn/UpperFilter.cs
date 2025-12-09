@@ -5,8 +5,10 @@ namespace FulcrumLabs.Conductor.Jinja.Filters.BuiltIn;
 /// </summary>
 public sealed class UpperFilter : IFilter
 {
+    /// <inheritdoc />
     public string Name => "upper";
 
+    /// <inheritdoc />
     public object? Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (value == null)

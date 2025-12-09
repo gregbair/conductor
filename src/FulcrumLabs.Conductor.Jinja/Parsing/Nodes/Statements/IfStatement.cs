@@ -5,6 +5,11 @@ namespace FulcrumLabs.Conductor.Jinja.Parsing.Nodes.Statements;
 /// </summary>
 public sealed class IfStatement : IStatement
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="IfStatement"/> class.
+    /// </summary>
+    /// <param name="condition">The condition expression.</param>
+    /// <param name="thenBody">The statements to execute if the condition is true.</param>
     public IfStatement(IExpression condition, IList<IStatement> thenBody)
     {
         Condition = condition;

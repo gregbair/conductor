@@ -5,6 +5,10 @@ namespace FulcrumLabs.Conductor.Jinja.Parsing.Nodes.Expressions;
 /// </summary>
 public sealed class LiteralExpression : IExpression
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="LiteralExpression"/> class.
+    /// </summary>
+    /// <param name="value">The literal value.</param>
     public LiteralExpression(object? value)
     {
         Value = value;

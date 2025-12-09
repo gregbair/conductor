@@ -2,8 +2,12 @@ using FulcrumLabs.Conductor.Modules.Common;
 
 namespace FulcrumLabs.Conductor.Modules.Shell;
 
+/// <summary>
+/// Attributes for the shell module.
+/// </summary>
 public class ShellModuleAttributes : AbstractBuiltinModuleAttributes
 {
+    /// <inheritdoc />
     public override string[] RespondsTo { get; } =
     [
         "ansible.builtin.shell",
@@ -13,5 +17,6 @@ public class ShellModuleAttributes : AbstractBuiltinModuleAttributes
         "command"
     ];
 
+    /// <inheritdoc />
     public override string Description => "Executes shell commands on the target host";
 }

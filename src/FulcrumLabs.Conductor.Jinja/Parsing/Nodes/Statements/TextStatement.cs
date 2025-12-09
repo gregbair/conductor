@@ -5,6 +5,10 @@ namespace FulcrumLabs.Conductor.Jinja.Parsing.Nodes.Statements;
 /// </summary>
 public sealed class TextStatement : IStatement
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="TextStatement"/> class.
+    /// </summary>
+    /// <param name="text">The literal text content.</param>
     public TextStatement(string text)
     {
         Text = text;

@@ -19,6 +19,7 @@ public sealed class PlaybookLoader : IPlaybookLoader
         .IgnoreUnmatchedProperties()
         .Build();
 
+    /// <inheritdoc />
     public Playbook LoadFromFile(string filePath)
     {
         if (!File.Exists(filePath))
@@ -30,6 +31,7 @@ public sealed class PlaybookLoader : IPlaybookLoader
         return LoadFromString(yamlContent);
     }
 
+    /// <inheritdoc />
     public Playbook LoadFromString(string yamlContent)
     {
         try
@@ -277,10 +279,19 @@ public sealed class PlaybookLoader : IPlaybookLoader
 /// </summary>
 public sealed class PlaybookLoadException : Exception
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaybookLoadException"/> class with a specified error message.
+    /// </summary>
+    /// <param name="message">The message that describes the error.</param>
     public PlaybookLoadException(string message) : base(message)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaybookLoadException"/> class with a specified error message and inner exception.
+    /// </summary>
+    /// <param name="message">The message that describes the error.</param>
+    /// <param name="innerException">The exception that is the cause of the current exception.</param>
     public PlaybookLoadException(string message, Exception innerException) : base(message, innerException)
     {
     }

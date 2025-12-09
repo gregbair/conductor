@@ -17,6 +17,7 @@ public sealed class WithItemsLoopDefinition : LoopDefinition
     /// </summary>
     public object? Items { get; init; }
 
+    /// <inheritdoc />
     public override IEnumerable<object?> GetItems(TemplateContext context, ITemplateExpander expander)
     {
         switch (Items)

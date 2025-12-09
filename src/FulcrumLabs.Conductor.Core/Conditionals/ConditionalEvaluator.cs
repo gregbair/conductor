@@ -13,11 +13,16 @@ public sealed class ConditionalEvaluator : IConditionalEvaluator
 {
     private readonly ITemplateExpander _templateExpander;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConditionalEvaluator"/> class.
+    /// </summary>
+    /// <param name="templateExpander">The template expander to use for evaluating expressions.</param>
     public ConditionalEvaluator(ITemplateExpander templateExpander)
     {
         _templateExpander = templateExpander;
     }
 
+    /// <inheritdoc />
     public bool Evaluate(string? condition, TemplateContext context)
     {
         if (string.IsNullOrWhiteSpace(condition))

@@ -17,6 +17,10 @@ public sealed class Renderer
     private readonly FilterRegistry _filterRegistry;
     private TemplateContext _context = null!;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="Renderer"/> class.
+    /// </summary>
+    /// <param name="filterRegistry">The filter registry to use for filter lookups. If null, the default registry is used.</param>
     public Renderer(FilterRegistry? filterRegistry = null)
     {
         _filterRegistry = filterRegistry ?? FilterRegistry.CreateDefault();

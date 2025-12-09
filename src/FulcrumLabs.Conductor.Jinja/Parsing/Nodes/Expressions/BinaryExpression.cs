@@ -40,26 +40,42 @@ public sealed class BinaryExpression : IExpression
 public enum BinaryOperator
 {
     // Arithmetic
+    /// <summary>Addition (+).</summary>
     Add,
+    /// <summary>Subtraction (-).</summary>
     Subtract,
+    /// <summary>Multiplication (*).</summary>
     Multiply,
+    /// <summary>Division (/).</summary>
     Divide,
+    /// <summary>Floor division (//).</summary>
     FloorDivide,
+    /// <summary>Modulo (%).</summary>
     Modulo,
+    /// <summary>Exponentiation (**).</summary>
     Power,
 
     // Comparison
+    /// <summary>Equality (==).</summary>
     Equal,
+    /// <summary>Inequality (!=).</summary>
     NotEqual,
+    /// <summary>Less than (&lt;).</summary>
     LessThan,
+    /// <summary>Less than or equal (&lt;=).</summary>
     LessThanOrEqual,
+    /// <summary>Greater than (&gt;).</summary>
     GreaterThan,
+    /// <summary>Greater than or equal (&gt;=).</summary>
     GreaterThanOrEqual,
 
     // Logical
+    /// <summary>Logical AND.</summary>
     And,
+    /// <summary>Logical OR.</summary>
     Or,
 
     // Membership
+    /// <summary>Membership test (in).</summary>
     In
 }

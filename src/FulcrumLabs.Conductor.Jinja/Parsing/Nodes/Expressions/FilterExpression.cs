@@ -5,6 +5,12 @@ namespace FulcrumLabs.Conductor.Jinja.Parsing.Nodes.Expressions;
 /// </summary>
 public sealed class FilterExpression : IExpression
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="FilterExpression"/> class.
+    /// </summary>
+    /// <param name="value">The value being filtered.</param>
+    /// <param name="filterName">The name of the filter.</param>
+    /// <param name="arguments">The arguments passed to the filter.</param>
     public FilterExpression(IExpression value, string filterName, IList<IExpression> arguments)
     {
         Value = value;
