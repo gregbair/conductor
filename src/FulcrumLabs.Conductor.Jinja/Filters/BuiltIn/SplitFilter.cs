@@ -9,7 +9,7 @@ public sealed class SplitFilter : IFilter
     public string Name => "split";
 
     /// <inheritdoc />
-    public object? Apply(object? value, object?[] arguments, FilterContext context)
+    public object Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (value == null)
         {

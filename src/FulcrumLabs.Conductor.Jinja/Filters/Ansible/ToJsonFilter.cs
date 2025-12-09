@@ -11,7 +11,7 @@ public sealed class ToJsonFilter : IFilter
     public string Name => "to_json";
 
     /// <inheritdoc />
-    public object? Apply(object? value, object?[] arguments, FilterContext context)
+    public object Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (value == null)
         {

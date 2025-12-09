@@ -11,34 +11,28 @@ public sealed class LengthFilter : IFilter
     public string Name => "length";
 
     /// <inheritdoc />
-    public object? Apply(object? value, object?[] arguments, FilterContext context)
+    public object Apply(object? value, object?[] arguments, FilterContext context)
     {
-        if (value == null)
+        switch (value)
         {
-            return 0;
+            case null:
+                return 0;
+            case string str:
+                return str.Length;
+            case ICollection collection:
+                return collection.Count;
+            case IEnumerable enumerable:
+                {
+                    int count = 0;
+                    foreach (object? _ in enumerable)
+                    {
+                        count++;
+                    }
+
+                    return count;
+                }
+            default:
+                return 0;
         }
-
-        if (value is string str)
-        {
-            return str.Length;
-        }
-
-        if (value is ICollection collection)
-        {
-            return collection.Count;
-        }
-
-        if (value is IEnumerable enumerable)
-        {
-            int count = 0;
-            foreach (object? _ in enumerable)
-            {
-                count++;
-            }
-
-            return count;
-        }
-
-        return 0;
     }
 }

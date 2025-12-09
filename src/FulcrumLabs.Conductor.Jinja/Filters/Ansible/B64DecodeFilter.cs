@@ -11,7 +11,7 @@ public sealed class B64DecodeFilter : IFilter
     public string Name => "b64decode";
 
     /// <inheritdoc />
-    public object? Apply(object? value, object?[] arguments, FilterContext context)
+    public object Apply(object? value, object?[] arguments, FilterContext context)
     {
         if (value == null)
         {

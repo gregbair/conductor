@@ -1,10 +1,7 @@
-using System.Linq;
-
-using FulcrumLabs.Conductor.Jinja.Rendering;
-
 using FulcrumLabs.Conductor.Core.Playbooks;
 using FulcrumLabs.Conductor.Core.Roles;
 using FulcrumLabs.Conductor.Core.Tasks;
+using FulcrumLabs.Conductor.Jinja.Rendering;
 
 using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 

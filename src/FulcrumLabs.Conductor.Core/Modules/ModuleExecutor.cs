@@ -28,14 +28,21 @@ public class ModuleExecutor
     /// <param name="moduleName">The name of the module to execute.</param>
     /// <param name="vars">The variables/parameters to pass to the module.</param>
     /// <param name="timeout">Optional timeout override for this execution.</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The result of the module execution.</returns>
     /// <exception cref="ModuleNotFoundException">Thrown if the module is not found in the registry.</exception>
     /// <exception cref="ModuleExecutionException">Thrown if the module execution fails.</exception>
     public async Task<ModuleResult> ExecuteAsync(
         string moduleName,
         Dictionary<string, object?> vars,
-        TimeSpan? timeout = null)
+        TimeSpan? timeout = null,
+        CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            throw new ModuleExecutionException("Cancellation requested");
+        }
+        
         string? modulePath = _registry.GetModulePath(moduleName);
         if (modulePath == null)
         {
@@ -58,6 +65,11 @@ public class ModuleExecutor
             CreateNoWindow = true
         };
 
+        if (cancellationToken.IsCancellationRequested)
+        {
+            throw new ModuleExecutionException("Cancellation requested");
+        }
+        
         using Process? process = Process.Start(startInfo);
         if (process == null)
         {

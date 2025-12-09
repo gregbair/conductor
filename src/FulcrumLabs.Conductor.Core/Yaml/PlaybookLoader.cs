@@ -5,7 +5,6 @@ using FulcrumLabs.Conductor.Core.Tasks;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 using Tasks_Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Yaml;
@@ -162,7 +161,7 @@ public sealed class PlaybookLoader : IPlaybookLoader
         }
 
         // Extract when condition
-        string? when = GetStringValue(dict, "when", null);
+        string when = GetStringValue(dict, "when", null);
 
         // Extract tags
         List<string> tags = [];

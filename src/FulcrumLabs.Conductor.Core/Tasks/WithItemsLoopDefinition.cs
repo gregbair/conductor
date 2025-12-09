@@ -1,8 +1,7 @@
 using System.Collections;
 
-using FulcrumLabs.Conductor.Jinja.Rendering;
-
 using FulcrumLabs.Conductor.Core.Templating;
+using FulcrumLabs.Conductor.Jinja.Rendering;
 
 namespace FulcrumLabs.Conductor.Core.Tasks;
 

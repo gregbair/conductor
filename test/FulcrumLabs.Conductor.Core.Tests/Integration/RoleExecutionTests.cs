@@ -4,10 +4,10 @@ using FulcrumLabs.Conductor.Core.Loops;
 using FulcrumLabs.Conductor.Core.Modules;
 using FulcrumLabs.Conductor.Core.Playbooks;
 using FulcrumLabs.Conductor.Core.Roles;
-using FulcrumLabs.Conductor.Core.Tasks;
 using FulcrumLabs.Conductor.Core.Templating;
 using FulcrumLabs.Conductor.Core.Yaml;
 using FulcrumLabs.Conductor.Jinja.Rendering;
+
 using Task = System.Threading.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Tests.Integration;
@@ -17,13 +17,9 @@ namespace FulcrumLabs.Conductor.Core.Tests.Integration;
 /// </summary>
 public class RoleExecutionTests
 {
-    private readonly string _fixturesPath;
+    private readonly string _fixturesPath = Path.Combine(Directory.GetCurrentDirectory(), "Fixtures", "roles");
 
-    public RoleExecutionTests()
-    {
-        // Get the path to test fixtures
-        _fixturesPath = Path.Combine(Directory.GetCurrentDirectory(), "Fixtures", "roles");
-    }
+    // Get the path to test fixtures
 
     [Fact]
     public async Task ExecutePlayWithSingleExternalRole_ShouldSucceed()
@@ -344,7 +340,7 @@ public class RoleExecutionTests
     }
 
     [Fact]
-    public async Task LoadRole_WithMissingTasksFile_ShouldThrowException()
+    public void LoadRole_WithMissingTasksFile_ShouldThrowException()
     {
         // Arrange
         RoleLoader loader = new();
@@ -422,20 +418,14 @@ public class RoleExecutionTests
     /// <summary>
     /// Test role loader that uses the fixtures path as the default roles base path.
     /// </summary>
-    private class TestRoleLoader : IRoleLoader
+    private class TestRoleLoader(string fixturesPath) : IRoleLoader
     {
         private readonly RoleLoader _innerLoader = new();
-        private readonly string _fixturesPath;
-
-        public TestRoleLoader(string fixturesPath)
-        {
-            _fixturesPath = fixturesPath;
-        }
 
         public Role LoadRole(string roleName, string rolesBasePath = "./roles")
         {
             // Override the default path with the fixtures path
-            return _innerLoader.LoadRole(roleName, _fixturesPath);
+            return _innerLoader.LoadRole(roleName, fixturesPath);
         }
     }
 }

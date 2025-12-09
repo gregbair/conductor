@@ -1,6 +1,5 @@
 using FulcrumLabs.Conductor.Core.Conditionals;
 using FulcrumLabs.Conductor.Core.Templating;
-
 using FulcrumLabs.Conductor.Jinja.Rendering;
 
 namespace FulcrumLabs.Conductor.Core.Tests.Conditionals;

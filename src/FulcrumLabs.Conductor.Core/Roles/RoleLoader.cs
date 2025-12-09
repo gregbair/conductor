@@ -1,6 +1,8 @@
 using FulcrumLabs.Conductor.Core.Tasks;
+
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+
 using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Roles;
@@ -76,7 +78,7 @@ public sealed class RoleLoader : IRoleLoader
             string yamlContent = File.ReadAllText(tasksFile);
             List<object> taskDataList = _deserializer.Deserialize<List<object>>(yamlContent);
 
-            if (taskDataList == null || taskDataList.Count == 0)
+            if (taskDataList.Count == 0)
             {
                 return new List<Task>();
             }
@@ -117,12 +119,7 @@ public sealed class RoleLoader : IRoleLoader
         try
         {
             string yamlContent = File.ReadAllText(varsFile);
-            Dictionary<object, object>? varsData = _deserializer.Deserialize<Dictionary<object, object>>(yamlContent);
-
-            if (varsData == null)
-            {
-                return new Dictionary<string, object?>();
-            }
+            Dictionary<object, object> varsData = _deserializer.Deserialize<Dictionary<object, object>>(yamlContent);
 
             Dictionary<string, object?> vars = new();
             foreach ((object key, object value) in varsData)
@@ -204,7 +201,7 @@ public sealed class RoleLoader : IRoleLoader
         return new Task
         {
             Name = name,
-            Module = moduleName!,  // Safe: we've already checked it's not null above
+            Module = moduleName,  // Safe: we've already checked it's not null above
             Parameters = parameters,
             When = when,
             Loop = loop,
@@ -274,7 +271,7 @@ public sealed class RoleLoader : IRoleLoader
     /// <returns>The string value or default.</returns>
     private static string? GetStringValue(Dictionary<string, object> dict, string key, string? defaultValue)
     {
-        if (dict.TryGetValue(key, out object? value) && value != null)
+        if (dict.TryGetValue(key, out object? value))
         {
             return value.ToString();
         }
@@ -298,7 +295,7 @@ public sealed class RoleLoader : IRoleLoader
                 return boolValue;
             }
 
-            if (value != null && bool.TryParse(value.ToString(), out bool parsedValue))
+            if (bool.TryParse(value.ToString(), out bool parsedValue))
             {
                 return parsedValue;
             }

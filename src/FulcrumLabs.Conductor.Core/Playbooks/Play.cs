@@ -1,6 +1,6 @@
-using ConductorTask = FulcrumLabs.Conductor.Core.Tasks.Task;
-using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 using FulcrumLabs.Conductor.Core.Roles;
+
+using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Playbooks;
 

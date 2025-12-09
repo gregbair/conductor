@@ -3,6 +3,7 @@ using FulcrumLabs.Conductor.Core.Execution;
 using FulcrumLabs.Conductor.Core.Loops;
 using FulcrumLabs.Conductor.Core.Modules;
 using FulcrumLabs.Conductor.Core.Playbooks;
+using FulcrumLabs.Conductor.Core.Roles;
 using FulcrumLabs.Conductor.Core.Templating;
 using FulcrumLabs.Conductor.Core.Yaml;
 
@@ -51,8 +52,8 @@ public class PlaybookExecutionTests
         TaskExecutor taskExecutor = new(moduleExecutor, templateExpander, conditionalEvaluator, loopExpander);
 
         // Create role expander (using the same conditional evaluator)
-        FulcrumLabs.Conductor.Core.Roles.RoleLoader roleLoader = new();
-        FulcrumLabs.Conductor.Core.Roles.RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
+        RoleLoader roleLoader = new();
+        RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
 
         PlaybookExecutor playbookExecutor = new(taskExecutor, roleExpander);
 
@@ -107,8 +108,8 @@ public class PlaybookExecutionTests
         TaskExecutor taskExecutor = new(moduleExecutor, templateExpander, conditionalEvaluator, loopExpander);
 
         // Create role expander (using the same conditional evaluator)
-        FulcrumLabs.Conductor.Core.Roles.RoleLoader roleLoader = new();
-        FulcrumLabs.Conductor.Core.Roles.RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
+        RoleLoader roleLoader = new();
+        RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
 
         PlaybookExecutor playbookExecutor = new(taskExecutor, roleExpander);
 
@@ -164,8 +165,8 @@ public class PlaybookExecutionTests
         TaskExecutor taskExecutor = new(moduleExecutor, templateExpander, conditionalEvaluator, loopExpander);
 
         // Create role expander (using the same conditional evaluator)
-        FulcrumLabs.Conductor.Core.Roles.RoleLoader roleLoader = new();
-        FulcrumLabs.Conductor.Core.Roles.RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
+        RoleLoader roleLoader = new();
+        RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
 
         PlaybookExecutor playbookExecutor = new(taskExecutor, roleExpander);
 

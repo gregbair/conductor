@@ -11,7 +11,7 @@ public sealed class PathJoinFilter : IFilter
     public string Name => "path_join";
 
     /// <inheritdoc />
-    public object? Apply(object? value, object?[] arguments, FilterContext context)
+    public object Apply(object? value, object?[] arguments, FilterContext context)
     {
         List<string> parts = new();
 

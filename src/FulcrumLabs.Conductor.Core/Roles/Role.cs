@@ -1,3 +1,5 @@
+using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
+
 namespace FulcrumLabs.Conductor.Core.Roles;
 
 /// <summary>
@@ -13,7 +15,7 @@ public sealed class Role
     /// <summary>
     /// Gets the list of tasks defined in this role.
     /// </summary>
-    public required IReadOnlyList<Tasks.Task> Tasks { get; init; }
+    public required IReadOnlyList<Task> Tasks { get; init; }
 
     /// <summary>
     /// Gets the default variables for this role (lowest precedence).
