@@ -1,0 +1,12 @@
+---
+# Example 1: Basic role usage
+# This playbook demonstrates the simplest way to use roles - just list them by name
+
+- name: Deploy web and database servers
+  roles:
+    - webserver
+    - database
+  tasks:
+    - name: Final configuration
+      debug:
+        msg: "All roles executed successfully!"

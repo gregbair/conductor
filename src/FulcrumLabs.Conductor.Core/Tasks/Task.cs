@@ -1,3 +1,5 @@
+using FulcrumLabs.Conductor.Core.Roles;
+
 namespace FulcrumLabs.Conductor.Core.Tasks;
 
 /// <summary>
@@ -52,4 +54,10 @@ public sealed class Task
     /// Variable name to register task result under.
     /// </summary>
     public string? RegisterAs { get; init; }
+
+    /// <summary>
+    /// Role reference for import_role or include_role tasks.
+    /// If present, this task represents a role invocation.
+    /// </summary>
+    public RoleReference? RoleReference { get; init; }
 }

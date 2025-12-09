@@ -1,0 +1,4 @@
+---
+# Role variables for database
+db_engine: "mysql"
+db_data_directory: "/var/lib/mysql"

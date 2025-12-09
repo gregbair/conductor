@@ -49,7 +49,12 @@ public class PlaybookExecutionTests
         LoopExpander loopExpander = new(templateExpander);
 
         TaskExecutor taskExecutor = new(moduleExecutor, templateExpander, conditionalEvaluator, loopExpander);
-        PlaybookExecutor playbookExecutor = new(taskExecutor);
+
+        // Create role expander (using the same conditional evaluator)
+        FulcrumLabs.Conductor.Core.Roles.RoleLoader roleLoader = new();
+        FulcrumLabs.Conductor.Core.Roles.RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
+
+        PlaybookExecutor playbookExecutor = new(taskExecutor, roleExpander);
 
         // Execute
         PlaybookResult result = await playbookExecutor.ExecuteAsync(playbook);
@@ -100,7 +105,12 @@ public class PlaybookExecutionTests
         LoopExpander loopExpander = new(templateExpander);
 
         TaskExecutor taskExecutor = new(moduleExecutor, templateExpander, conditionalEvaluator, loopExpander);
-        PlaybookExecutor playbookExecutor = new(taskExecutor);
+
+        // Create role expander (using the same conditional evaluator)
+        FulcrumLabs.Conductor.Core.Roles.RoleLoader roleLoader = new();
+        FulcrumLabs.Conductor.Core.Roles.RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
+
+        PlaybookExecutor playbookExecutor = new(taskExecutor, roleExpander);
 
         PlaybookResult result = await playbookExecutor.ExecuteAsync(playbook);
 
@@ -152,7 +162,12 @@ public class PlaybookExecutionTests
         LoopExpander loopExpander = new(templateExpander);
 
         TaskExecutor taskExecutor = new(moduleExecutor, templateExpander, conditionalEvaluator, loopExpander);
-        PlaybookExecutor playbookExecutor = new(taskExecutor);
+
+        // Create role expander (using the same conditional evaluator)
+        FulcrumLabs.Conductor.Core.Roles.RoleLoader roleLoader = new();
+        FulcrumLabs.Conductor.Core.Roles.RoleExpander roleExpander = new(roleLoader, conditionalEvaluator);
+
+        PlaybookExecutor playbookExecutor = new(taskExecutor, roleExpander);
 
         PlaybookResult result = await playbookExecutor.ExecuteAsync(playbook);
 

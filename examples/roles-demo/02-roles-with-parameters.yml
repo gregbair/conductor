@@ -1,0 +1,16 @@
+---
+# Example 2: Roles with parameters
+# Pass custom variables to roles to override their defaults
+
+- name: Deploy customized servers
+  roles:
+    - name: webserver
+      vars:
+        webserver_port: 8080
+        webserver_workers: 8
+        webserver_ssl_enabled: true
+
+    - name: database
+      vars:
+        db_port: 3306
+        db_max_connections: 200

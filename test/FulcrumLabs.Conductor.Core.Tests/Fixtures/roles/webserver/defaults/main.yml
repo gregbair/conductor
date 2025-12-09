@@ -1,0 +1,4 @@
+---
+webserver_port: 8080
+webserver_workers: 4
+webserver_name: "nginx"

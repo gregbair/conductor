@@ -1,0 +1,20 @@
+---
+# Example 3: Variable precedence
+# Play vars take precedence over role vars, which take precedence over role defaults
+# Precedence order: play vars > role params > role vars > role defaults
+
+- name: Demonstrate variable precedence
+  vars:
+    # This will override the role's vars and defaults
+    webserver_port: 9000
+
+  roles:
+    - name: webserver
+      vars:
+        # This will override the role's defaults but NOT the play vars
+        webserver_workers: 16
+
+  tasks:
+    - name: Show final configuration
+      debug:
+        msg: "Webserver will run on port 9000 (from play vars) with 16 workers (from role params)"

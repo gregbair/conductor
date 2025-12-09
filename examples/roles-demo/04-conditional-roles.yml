@@ -1,0 +1,21 @@
+---
+# Example 4: Conditional role execution
+# Use 'when' conditions to control whether roles are executed
+
+- name: Conditionally deploy services
+  vars:
+    install_webserver: true
+    install_database: false
+    environment: "production"
+
+  roles:
+    - name: webserver
+      when: install_webserver
+
+    - name: database
+      when: install_database
+
+  tasks:
+    - name: Report what was installed
+      debug:
+        msg: "Webserver installed: {{ install_webserver }}, Database installed: {{ install_database }}"

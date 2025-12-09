@@ -1,0 +1,17 @@
+---
+# Webserver role tasks
+- name: Install web server package
+  debug:
+    msg: "Installing {{ webserver_package }} on port {{ webserver_port }}"
+
+- name: Configure web server
+  debug:
+    msg: "Configuring with {{ webserver_workers }} workers"
+
+- name: Start web server service
+  debug:
+    msg: "Starting {{ webserver_package }} service"
+
+- name: Enable firewall rules
+  debug:
+    msg: "Opening port {{ webserver_port }}"
