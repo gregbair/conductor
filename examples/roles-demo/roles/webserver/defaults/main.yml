@@ -1,0 +1,6 @@
+---
+# Default variables for webserver role (lowest precedence)
+webserver_port: 80
+webserver_workers: 4
+webserver_package: "nginx"
+webserver_ssl_enabled: false

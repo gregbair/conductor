@@ -1,6 +1,7 @@
+using FulcrumLabs.Conductor.Core.Tasks;
 using FulcrumLabs.Conductor.Jinja.Rendering;
 
-using FulcrumLabs.Conductor.Core.Tasks;
+using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Execution;
 
@@ -12,5 +13,5 @@ public interface ITaskExecutor
     /// <summary>
     /// Executes a task with the given context.
     /// </summary>
-    Task<TaskResult> ExecuteAsync(Tasks.Task task, TemplateContext context, CancellationToken cancellationToken = default);
+    Task<TaskResult> ExecuteAsync(Task task, TemplateContext context, CancellationToken cancellationToken = default);
 }

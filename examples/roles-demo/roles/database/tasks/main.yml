@@ -1,0 +1,17 @@
+---
+# Database role tasks
+- name: Install database server
+  debug:
+    msg: "Installing {{ db_engine }} version {{ db_version }}"
+
+- name: Configure database
+  debug:
+    msg: "Setting up {{ db_engine }} on port {{ db_port }} with {{ db_max_connections }} connections"
+
+- name: Initialize database
+  debug:
+    msg: "Creating initial database schema"
+
+- name: Start database service
+  debug:
+    msg: "Starting {{ db_engine }} service"

@@ -1,10 +1,10 @@
 using FulcrumLabs.Conductor.Core.Playbooks;
+using FulcrumLabs.Conductor.Core.Roles;
 using FulcrumLabs.Conductor.Core.Tasks;
 
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 using Tasks_Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Yaml;
@@ -79,6 +79,13 @@ public sealed class PlaybookLoader : IPlaybookLoader
             }
         }
 
+        // Extract roles
+        List<RoleReference> roles = [];
+        if (playData.TryGetValue("roles", out object? rolesObj))
+        {
+            roles = ExtractRoles(rolesObj);
+        }
+
         // Extract tasks
         List<Tasks_Task> tasks = [];
         if (playData.TryGetValue("tasks", out object? tasksObj) && tasksObj is List<object> tasksList)
@@ -92,7 +99,96 @@ public sealed class PlaybookLoader : IPlaybookLoader
             }
         }
 
-        return new Play { Name = name, Vars = vars, Tasks = tasks };
+        return new Play { Name = name, Vars = vars, Roles = roles, Tasks = tasks };
+    }
+
+    /// <summary>
+    /// Extracts role references from the roles section of a play.
+    /// </summary>
+    /// <param name="rolesObj">The roles object from YAML (can be a list of strings or dictionaries).</param>
+    /// <returns>A list of role references.</returns>
+    private List<RoleReference> ExtractRoles(object rolesObj)
+    {
+        List<RoleReference> roles = [];
+
+        if (rolesObj is List<object> rolesList)
+        {
+            foreach (object roleObj in rolesList)
+            {
+                switch (roleObj)
+                {
+                    // String format: roles: [webserver, database]
+                    case string roleName:
+                        roles.Add(new ExternalRoleReference { Name = roleName });
+                        break;
+
+                    // Dictionary format: roles: [{name: webserver, vars: {...}}]
+                    case Dictionary<object, object> roleDict:
+                        roles.Add(ParseRoleDict(roleDict));
+                        break;
+                }
+            }
+        }
+
+        return roles;
+    }
+
+    /// <summary>
+    /// Parses a role dictionary into a RoleReference.
+    /// </summary>
+    /// <param name="roleDict">The role dictionary from YAML.</param>
+    /// <returns>A role reference.</returns>
+    private RoleReference ParseRoleDict(Dictionary<object, object> roleDict)
+    {
+        // Convert to string keys
+        Dictionary<string, object> dict = roleDict.ToDictionary(
+            kvp => kvp.Key.ToString()!,
+            kvp => kvp.Value
+        );
+
+        // Extract role name (required)
+        string roleName = GetStringValue(dict, "name", null)
+            ?? throw new PlaybookLoadException("Role definition must include 'name'");
+
+        // Extract parameters (vars passed to the role)
+        Dictionary<string, object?> parameters = [];
+        if (dict.TryGetValue("vars", out object? varsObj) && varsObj is Dictionary<object, object> varsDict)
+        {
+            foreach ((object key, object value) in varsDict)
+            {
+                parameters[key.ToString()!] = ConvertYamlValue(value);
+            }
+        }
+
+        // Extract when condition
+        string when = GetStringValue(dict, "when", null);
+
+        // Extract tags
+        List<string> tags = [];
+        if (dict.TryGetValue("tags", out object? tagsObj))
+        {
+            if (tagsObj is string singleTag)
+            {
+                tags.Add(singleTag);
+            }
+            else if (tagsObj is List<object> tagsList)
+            {
+                foreach (object tag in tagsList)
+                {
+                    tags.Add(tag.ToString()!);
+                }
+            }
+        }
+
+        // Create ExternalRoleReference (default case)
+        // Note: InlineRoleReference would be detected if 'tasks' key is present in roleDict
+        return new ExternalRoleReference
+        {
+            Name = roleName,
+            Parameters = parameters,
+            When = when,
+            Tags = tags
+        };
     }
 
     private Tasks_Task BuildTask(Dictionary<object, object> taskData)
@@ -122,6 +218,16 @@ public sealed class PlaybookLoader : IPlaybookLoader
         else if (taskDict.TryGetValue("with_items", out object? withItemsObj))
         {
             loop = new WithItemsLoopDefinition { Items = withItemsObj };
+        }
+
+        // Check for role invocation tasks first
+        if (taskDict.ContainsKey("import_role"))
+        {
+            return BuildRoleTask(taskDict, "import_role", name, when, register);
+        }
+        if (taskDict.ContainsKey("include_role"))
+        {
+            return BuildRoleTask(taskDict, "include_role", name, when, register);
         }
 
         // Find the module name and parameters
@@ -162,6 +268,76 @@ public sealed class PlaybookLoader : IPlaybookLoader
             FailedWhen = failedWhen,
             ChangedWhen = changedWhen,
             RegisterAs = register
+        };
+    }
+
+    /// <summary>
+    /// Builds a task that invokes a role using import_role or include_role.
+    /// </summary>
+    /// <param name="taskDict">The task dictionary from YAML.</param>
+    /// <param name="roleTaskType">Either "import_role" or "include_role".</param>
+    /// <param name="taskName">The name of the task.</param>
+    /// <param name="when">The when condition for the task.</param>
+    /// <param name="register">The variable name to register the result under.</param>
+    /// <returns>A task with a RoleReference.</returns>
+    private Tasks_Task BuildRoleTask(Dictionary<string, object> taskDict, string roleTaskType, string taskName, string? when, string? register)
+    {
+        // Get the role parameters
+        if (!taskDict.TryGetValue(roleTaskType, out object? roleParamsObj))
+        {
+            throw new PlaybookLoadException($"Task '{taskName}' has {roleTaskType} but no role parameters");
+        }
+
+        // Role parameters can be a string (just role name) or dictionary
+        string roleName;
+        Dictionary<string, object?> roleParameters = [];
+
+        switch (roleParamsObj)
+        {
+            case string roleNameStr:
+                roleName = roleNameStr;
+                break;
+
+            case Dictionary<object, object> roleParamsDict:
+                {
+                    Dictionary<string, object> roleDict = roleParamsDict.ToDictionary(
+                        kvp => kvp.Key.ToString()!,
+                        kvp => kvp.Value
+                    );
+
+                    roleName = GetStringValue(roleDict, "name", null)
+                        ?? throw new PlaybookLoadException($"Task '{taskName}' {roleTaskType} must specify role 'name'");
+
+                    // Extract vars
+                    if (roleDict.TryGetValue("vars", out object? varsObj) && varsObj is Dictionary<object, object> varsDict)
+                    {
+                        foreach ((object key, object value) in varsDict)
+                        {
+                            roleParameters[key.ToString()!] = ConvertYamlValue(value);
+                        }
+                    }
+
+                    break;
+                }
+
+            default:
+                throw new PlaybookLoadException($"Task '{taskName}' has invalid {roleTaskType} format");
+        }
+
+        // Create the appropriate RoleReference
+        RoleReference roleRef = roleTaskType == "import_role"
+            ? new ImportRoleReference { Name = roleName, Parameters = roleParameters, When = when }
+            : new IncludeRoleReference { Name = roleName, Parameters = roleParameters, When = when };
+
+        // Create a task with the RoleReference
+        return new Tasks_Task
+        {
+            Name = taskName,
+            Module = roleTaskType,  // Use the role task type as the module name
+            Parameters = [],  // Parameters are in the RoleReference
+            When = when,
+            RegisterAs = register,
+            RoleReference = roleRef
         };
     }
 

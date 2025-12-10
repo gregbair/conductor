@@ -1,0 +1,12 @@
+---
+- name: Install database
+  debug:
+    msg: "Installing {{ db_engine }} database"
+
+- name: Configure database
+  debug:
+    msg: "Configuring database on port {{ db_port }}"
+
+- name: Initialize database
+  debug:
+    msg: "Initializing database with {{ db_max_connections }} max connections"

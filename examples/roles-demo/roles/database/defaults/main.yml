@@ -1,0 +1,7 @@
+---
+# Default variables for database role
+db_port: 5432
+db_engine: "postgresql"
+db_version: "15"
+db_max_connections: 100
+db_enable_backups: true

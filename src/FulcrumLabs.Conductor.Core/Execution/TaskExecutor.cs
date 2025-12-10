@@ -1,12 +1,10 @@
-using FulcrumLabs.Conductor.Jinja.Rendering;
-
 using FulcrumLabs.Conductor.Core.Conditionals;
 using FulcrumLabs.Conductor.Core.Loops;
 using FulcrumLabs.Conductor.Core.Modules;
 using FulcrumLabs.Conductor.Core.Tasks;
 using FulcrumLabs.Conductor.Core.Templating;
+using FulcrumLabs.Conductor.Jinja.Rendering;
 
-using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 using Tasks_Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Execution;
@@ -179,7 +177,7 @@ public sealed class TaskExecutor(
         Dictionary<string, object?> expandedParams = templateExpander.ExpandParameters(task.Parameters, context);
 
         // Execute module (note: ModuleExecutor doesn't currently support CancellationToken)
-        ModuleResult moduleResult = await moduleExecutor.ExecuteAsync(task.Module, expandedParams);
+        ModuleResult moduleResult = await moduleExecutor.ExecuteAsync(task.Module, expandedParams,null, cancellationToken);
 
         // Apply conditional overrides
         bool failed = EvaluateFailedWhen(task, moduleResult, context);

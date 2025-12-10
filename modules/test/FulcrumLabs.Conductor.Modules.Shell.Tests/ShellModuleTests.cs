@@ -67,7 +67,7 @@ public class ShellModuleTests
     {
         Dictionary<string, object?> vars = new()
         {
-            ["cmd"] = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "echo test" : "echo test"
+            ["cmd"] = "echo test"
         };
 
         ModuleResult result = await ExecuteModuleAsync(vars);
@@ -176,7 +176,7 @@ public class ShellModuleTests
     {
         Dictionary<string, object?> vars = new()
         {
-            ["cmd"] = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "echo test" : "echo test"
+            ["cmd"] = "echo test"
         };
 
         ModuleResult result = await ExecuteModuleAsync(vars);

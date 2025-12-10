@@ -1,6 +1,5 @@
-using FulcrumLabs.Conductor.Jinja.Rendering;
-
 using FulcrumLabs.Conductor.Core.Tasks;
+using FulcrumLabs.Conductor.Jinja.Rendering;
 
 namespace FulcrumLabs.Conductor.Core.Loops;
 

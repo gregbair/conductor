@@ -296,14 +296,9 @@ public class ModuleBaseTests
     {
         public Func<Dictionary<string, object?>, Task<ModuleResult>>? ExecuteFunc { get; init; }
 
-        protected override Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars)
+        protected override Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars, CancellationToken cancellationToken = default)
         {
-            if (ExecuteFunc != null)
-            {
-                return ExecuteFunc(vars);
-            }
-
-            return Task.FromResult(Success("Test executed", true));
+            return ExecuteFunc != null ? ExecuteFunc(vars) : Task.FromResult(Success("Test executed", true));
         }
 
         // Expose protected methods for testing

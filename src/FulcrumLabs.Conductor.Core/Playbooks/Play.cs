@@ -1,4 +1,5 @@
-using ConductorTask = FulcrumLabs.Conductor.Core.Tasks.Task;
+using FulcrumLabs.Conductor.Core.Roles;
+
 using Task = FulcrumLabs.Conductor.Core.Tasks.Task;
 
 namespace FulcrumLabs.Conductor.Core.Playbooks;
@@ -13,6 +14,12 @@ public sealed class Play
     /// Human-readable name of the play.
     /// </summary>
     public string Name { get; init; } = string.Empty;
+
+    /// <summary>
+    /// List of role references to be executed in this play.
+    /// Roles are executed before tasks.
+    /// </summary>
+    public IReadOnlyList<RoleReference> Roles { get; init; } = Array.Empty<RoleReference>();
 
     /// <summary>
     /// List of tasks in this play.
