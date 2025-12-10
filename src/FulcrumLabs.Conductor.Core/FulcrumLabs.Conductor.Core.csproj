@@ -9,11 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="YamlDotNet" />
+    <PackageReference Include="Semver"/>
+    <PackageReference Include="YamlDotNet"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FulcrumLabs.Conductor.Jinja\FulcrumLabs.Conductor.Jinja.csproj" />
+    <ProjectReference Include="..\FulcrumLabs.Conductor.Jinja\FulcrumLabs.Conductor.Jinja.csproj"/>
   </ItemGroup>
 
 </Project>

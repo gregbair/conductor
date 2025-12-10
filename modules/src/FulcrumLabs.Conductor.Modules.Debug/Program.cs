@@ -1,3 +1,7 @@
-﻿using FulcrumLabs.Conductor.Modules.Debug;
+﻿using System.Threading;
 
-return await new DebugModule().RunAsync();
+using FulcrumLabs.Conductor.Modules.Common;
+using FulcrumLabs.Conductor.Modules.Debug;
+
+CancellationTokenSource cts = ModuleBase.CreateShutdownTokenSource();
+return await new DebugModule().RunAsync(cts.Token);
