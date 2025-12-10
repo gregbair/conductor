@@ -12,13 +12,14 @@ public abstract class ModuleBase
     /// <summary>
     ///     Runs the module, reading input from stdin and writing output to stdout.
     /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Exit code (0 for success, 1 for failure).</returns>
-    public async Task<int> RunAsync()
+    public async Task<int> RunAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             // Read input from stdin
-            string inputJson = await Console.In.ReadToEndAsync();
+            string inputJson = await Console.In.ReadToEndAsync(cancellationToken);
 
             if (string.IsNullOrWhiteSpace(inputJson))
             {
@@ -44,7 +45,7 @@ public abstract class ModuleBase
             }
 
             // Execute the module-specific logic
-            ModuleResult result = await ExecuteAsync(input);
+            ModuleResult result = await ExecuteAsync(input, cancellationToken);
 
             // Output the result as JSON
             OutputResult(result);
@@ -63,8 +64,9 @@ public abstract class ModuleBase
     ///     Override this method to implement your module's functionality.
     /// </summary>
     /// <param name="vars">The input variables/parameters for the module.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The result of the module execution.</returns>
-    protected abstract Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars);
+    protected abstract Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Helper method to get a required parameter from the <paramref name="vars" /> dictionary.

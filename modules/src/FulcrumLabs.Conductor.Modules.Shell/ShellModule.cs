@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 using FulcrumLabs.Conductor.Core.Modules;
@@ -15,7 +16,7 @@ namespace FulcrumLabs.Conductor.Modules.Shell;
 public class ShellModule : ModuleBase
 {
     /// <inheritdoc />
-    protected override async Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars)
+    protected override async Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars, CancellationToken cancellationToken = default)
     {
         // Get the command to execute
         if (!TryGetRequiredParameter(vars, "cmd", out string command))
@@ -85,10 +86,10 @@ public class ShellModule : ModuleBase
             }
 
             // Read output
-            Task<string> stdoutTask = process.StandardOutput.ReadToEndAsync();
-            Task<string> stderrTask = process.StandardError.ReadToEndAsync();
+            Task<string> stdoutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+            Task<string> stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
 
-            await process.WaitForExitAsync();
+            await process.WaitForExitAsync(cancellationToken);
 
             string stdout = await stdoutTask;
             string stderr = await stderrTask;

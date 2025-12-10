@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using FulcrumLabs.Conductor.Core.Modules;
@@ -12,7 +13,7 @@ namespace FulcrumLabs.Conductor.Modules.Debug;
 public class DebugModule : ModuleBase
 {
     /// <inheritdoc/>
-    protected override Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars)
+    protected override Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars, CancellationToken cancellationToken = default)
     {
         // Debug module supports either 'msg' or 'var' parameter
         string message;

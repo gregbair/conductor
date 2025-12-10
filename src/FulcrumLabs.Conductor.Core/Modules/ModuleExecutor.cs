@@ -79,16 +79,16 @@ public class ModuleExecutor
         try
         {
             // Send input via stdin
-            await process.StandardInput.WriteAsync(inputJson);
-            await process.StandardInput.FlushAsync();
+            await process.StandardInput.WriteAsync(inputJson.AsMemory(), cancellationToken);
+            await process.StandardInput.FlushAsync(cancellationToken);
             process.StandardInput.Close();
 
             // Read output with timeout
-            Task<string> outputTask = process.StandardOutput.ReadToEndAsync();
-            Task<string> errorTask = process.StandardError.ReadToEndAsync();
-            Task waitTask = process.WaitForExitAsync();
+            Task<string> outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+            Task<string> errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
+            Task waitTask = process.WaitForExitAsync(cancellationToken);
 
-            Task completedTask = await Task.WhenAny(waitTask, Task.Delay(effectiveTimeout));
+            Task completedTask = await Task.WhenAny(waitTask, Task.Delay(effectiveTimeout, cancellationToken));
 
             if (completedTask != waitTask)
             {
