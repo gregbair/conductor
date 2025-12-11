@@ -29,7 +29,8 @@ public class InstallExecutor : BaseExecutor
     public async Task<int> ExecuteInstallationAsync(string host, string username, string sudoPassword,
         CancellationToken cancellationToken)
     {
-        string hostDisplay = $"[bold blue]({host}):[/]";
+        string hostColor = GetRandomColor();
+        string hostDisplay = $"[bold italic underline {hostColor}]({host}):[/]";
         using TempDirectory tempDir = new("conductor-agent-");
         // Find all modules
         OutputLine($"{hostDisplay} Finding all modules");
@@ -49,7 +50,7 @@ public class InstallExecutor : BaseExecutor
         AnsiConsole.Write(modTable);
 
         // Package modules + agent
-        OutputLine("Packing agent and modules...");
+        OutputLine($"{hostDisplay} Packing agent and modules...");
         CopyModules(registry, tempDir.Path);
         string bundlePath = await CreateBundle(tempDir.Path, Path.Combine(tempDir.Path, "bundle"), cancellationToken);
         string bundleOutput = $"{hostDisplay} Bundle packed successfully - {bundlePath}";

@@ -18,7 +18,8 @@ public class UninstallExecutor : BaseExecutor
     public async Task<int> ExecuteUninstall(string host, string username, string sudoPassword,
         CancellationToken cancellationToken = default)
     {
-        string hostDisplay = $"[bold blue]({host}):[/]";
+        string hostColor = GetRandomColor();
+        string hostDisplay = $"[bold italic underline {hostColor}]({host}):[/]";
 
         OutputLine($"{hostDisplay} Uninstalling agent in directory {AgentDir}...");
 

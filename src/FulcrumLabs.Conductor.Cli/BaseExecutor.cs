@@ -103,6 +103,21 @@ public abstract class BaseExecutor
         return new ScpClient(new ConnectionInfo(host, username, authMethod));
     }
 
+    /// <summary>
+    ///     Gets a random color
+    /// </summary>
+    /// <returns>A random color</returns>
+    protected string GetRandomColor()
+    {
+        string[] colors =
+        [
+            "maroon", "green", "olive", "navy", "purple", "teal", "silver", "grey", "red", "lime", "yellow", "blue",
+            "fuchsia", "aqua", "white"
+        ];
+
+        return colors[Random.Shared.Next(colors.Length)];
+    }
+
     private static string GetKeyFilePath()
     {
         string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
