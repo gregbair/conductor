@@ -1,7 +1,5 @@
 using Renci.SshNet;
 
-using Spectre.Console;
-
 namespace FulcrumLabs.Conductor.Cli.Uninstall;
 
 /// <summary>
@@ -20,15 +18,15 @@ public class UninstallExecutor : BaseExecutor
     public async Task<int> ExecuteUninstall(string host, string username, string sudoPassword,
         CancellationToken cancellationToken = default)
     {
-        string hostDisplay = $"[bold yellow]({host})[/]";
+        string hostDisplay = $"[bold blue]({host}):[/]";
 
-        AnsiConsole.MarkupLine($"Uninstalling agent in directory {AgentDir}... {hostDisplay}");
+        OutputLine($"{hostDisplay} Uninstalling agent in directory {AgentDir}...");
 
         using SshClient sshClient = CreateSshClient(host, username);
         await sshClient.ConnectAsync(cancellationToken);
 
         ExecuteWithSudoAsync(sshClient, $"rm -fr {AgentDir}", sudoPassword);
-        AnsiConsole.MarkupLine($"Agent successfully uninstalled {hostDisplay}");
+        OutputLine($"{hostDisplay} Agent successfully uninstalled");
         return 0;
     }
 }

@@ -29,10 +29,10 @@ public class InstallExecutor : BaseExecutor
     public async Task<int> ExecuteInstallationAsync(string host, string username, string sudoPassword,
         CancellationToken cancellationToken)
     {
-        string hostDisplay = $"[bold yellow]({host})[/]";
+        string hostDisplay = $"[bold blue]({host}):[/]";
         using TempDirectory tempDir = new("conductor-agent-");
         // Find all modules
-        AnsiConsole.MarkupLine($"Finding all modules {hostDisplay}");
+        OutputLine($"{hostDisplay} Finding all modules");
         ModuleRegistry registry = new();
         registry.DiscoverModulesFromStandardPaths();
 
@@ -45,19 +45,18 @@ public class InstallExecutor : BaseExecutor
             modTable.AddRow($"[blue]{name}[/]", $"[green]{registry.GetModulePath(name)}[/]");
         }
 
-        AnsiConsole.MarkupLine($"Modules found {hostDisplay}:");
+        OutputLine($"{hostDisplay} Modules found:");
         AnsiConsole.Write(modTable);
 
         // Package modules + agent
-        AnsiConsole.MarkupLine($"Packing agent and modules... {hostDisplay}");
+        OutputLine("Packing agent and modules...");
         CopyModules(registry, tempDir.Path);
         string bundlePath = await CreateBundle(tempDir.Path, Path.Combine(tempDir.Path, "bundle"), cancellationToken);
-        AnsiConsole.Markup($"Bundle packed successfully {hostDisplay} ");
-        AnsiConsole.Write(new TextPath(bundlePath));
-        AnsiConsole.WriteLine();
+        string bundleOutput = $"{hostDisplay} Bundle packed successfully - {bundlePath}";
+        OutputLine(bundleOutput);
 
         // SSH to node, create /opt/conductor if not exists
-        AnsiConsole.MarkupLine($"Verifying existence of {AgentDir} {hostDisplay}");
+        OutputLine($"{hostDisplay} Verifying existence of {AgentDir}");
         SshClient sshClient = CreateSshClient(host, username);
         await sshClient.ConnectAsync(cancellationToken);
 
@@ -65,7 +64,7 @@ public class InstallExecutor : BaseExecutor
 
         if (!dirExists)
         {
-            AnsiConsole.MarkupLine($"{AgentDir} doesn't exist, creating... {hostDisplay}");
+            OutputLine($"{hostDisplay} {AgentDir} doesn't exist, creating...");
             CreateAgentDir(sshClient, sudoPassword);
             dirExists = AgentDirExists(sshClient);
             if (!dirExists)
@@ -74,11 +73,11 @@ public class InstallExecutor : BaseExecutor
                 return -1;
             }
 
-            AnsiConsole.MarkupLine($"{AgentDir} created {hostDisplay}");
+            OutputLine($"{hostDisplay} {AgentDir} created");
         }
         else
         {
-            AnsiConsole.MarkupLine($"{AgentDir} exists {hostDisplay}");
+            OutputLine($"{hostDisplay} {AgentDir} exists");
         }
 
 
@@ -86,19 +85,19 @@ public class InstallExecutor : BaseExecutor
         using ScpClient scpClient = CreateScpClient(host, username);
         await scpClient.ConnectAsync(cancellationToken);
 
-        AnsiConsole.MarkupLine($"Copying bundle over to managed node... {hostDisplay}");
+        OutputLine($"{hostDisplay} Copying bundle over to managed node...");
         CopyFileOverToRemoteHost(scpClient, bundlePath);
-        AnsiConsole.MarkupLine($"Bundle copied over to managed node {hostDisplay}");
+        OutputLine($"{hostDisplay} Bundle copied over to managed node");
 
         // Use SSH connection to unpack bundle
-        AnsiConsole.MarkupLine($"Unpacking and installing bundle... {hostDisplay}");
+        OutputLine($"{hostDisplay} Unpacking and installing bundle...");
         UnpackAndCopyBundle(sshClient, sudoPassword);
-        AnsiConsole.MarkupLine($"Bundle installed {hostDisplay}");
+        OutputLine($"{hostDisplay} Bundle installed");
 
         // check version of agent
-        AnsiConsole.MarkupLine($"Verifying installation... {hostDisplay}");
+        OutputLine($"{hostDisplay} Verifying installation...");
         VersionResult? version = GetAgentVersion(sshClient);
-        AnsiConsole.MarkupLine($"Verified  version {version?.AgentVersion ?? "(no version found)"} {hostDisplay}");
+        OutputLine($"{hostDisplay} Verified  version {version?.AgentVersion ?? "(no version found)"}");
 
         return version == null ? -1 : 0;
     }

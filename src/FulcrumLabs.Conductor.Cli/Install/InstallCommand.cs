@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 using Spectre.Console.Cli;
 
 namespace FulcrumLabs.Conductor.Cli.Install;
@@ -17,14 +19,17 @@ public class InstallCommand : AsyncCommand<InstallCommandSettings>
 
         InstallExecutor executor = new();
 
+        ConcurrentBag<int> results = [];
         // foreach host, run executor
-        foreach (string host in settings.Hosts)
+        await Parallel.ForEachAsync(settings.Hosts, cancellationToken, async (host, token) =>
         {
-            await executor.ExecuteInstallationAsync(host, settings.User ?? "", settings.SudoPassword ?? "",
-                cancellationToken);
-        }
+            int result = await executor.ExecuteInstallationAsync(host, settings.User ?? "", settings.SudoPassword ?? "",
+                token);
 
-        int result = 0;
+            results.Add(result);
+        });
+
+        int result = results.Any(x => x != 0) ? 1 : 0;
 
         // output results
         return result;

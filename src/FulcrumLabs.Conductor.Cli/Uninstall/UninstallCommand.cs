@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 using Spectre.Console.Cli;
 
 namespace FulcrumLabs.Conductor.Cli.Uninstall;
@@ -15,11 +17,14 @@ public class UninstallCommand : AsyncCommand<UninstallCommandSettings>
     {
         UninstallExecutor executor = new();
 
-        foreach (string host in settings.Hosts)
+        ConcurrentBag<int> results = [];
+        await Parallel.ForEachAsync(settings.Hosts, cancellationToken, async (host, token) =>
         {
-            await executor.ExecuteUninstall(host, settings.User!, settings.SudoPassword!, cancellationToken);
-        }
+            int result = await executor.ExecuteUninstall(host, settings.User!, settings.SudoPassword!, token);
 
-        return 0;
+            results.Add(result);
+        });
+
+        return results.Any(x => x != 0) ? 1 : 0;
     }
 }

@@ -3,6 +3,8 @@ using System.Text.RegularExpressions;
 
 using Renci.SshNet;
 
+using Spectre.Console;
+
 namespace FulcrumLabs.Conductor.Cli;
 
 /// <summary>
@@ -22,6 +24,18 @@ public abstract class BaseExecutor
     ///     The directory in which the agent is.
     /// </summary>
     protected static readonly string AgentDir = Path.Combine("/opt", "conductor");
+
+    /// <summary>
+    ///     Outputs a line using <see cref="Rule" />
+    /// </summary>
+    /// <param name="text">The text to use as the title of the rule</param>
+    protected static void OutputLine(string text)
+    {
+        Rule rule = new(text);
+        rule.Justification = Justify.Left;
+        rule.RuleStyle("yellow");
+        AnsiConsole.Write(rule);
+    }
 
     /// <summary>
     ///     Executes a command with sudo
