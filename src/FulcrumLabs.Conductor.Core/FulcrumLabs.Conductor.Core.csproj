@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <Description>Core library for Fulcrum.Conductor, an Ansible-compatible orchestration and automation engine for .NET. Includes task execution, playbook parsing, templating, conditionals, and loops.</Description>
     <PackageId>FulcrumLabs.Conductor.Core</PackageId>
+    <!-- Suppress trim warnings - module results can contain arbitrary dynamic data -->
+    <NoWarn>$(NoWarn);IL2026;IL2075;IL2067;IL2070</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

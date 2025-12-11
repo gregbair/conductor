@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 
 using FulcrumLabs.Conductor.Core.Modules;
@@ -12,6 +11,11 @@ namespace FulcrumLabs.Conductor.Modules.Common;
 public abstract class ModuleBase
 {
     /// <summary>
+    ///     The version of the conductor protocol currently in use
+    /// </summary>
+    public const string ProtocolVersion = "0.1.0";
+
+    /// <summary>
     ///     Gets the Name of the current module
     /// </summary>
     private readonly string _moduleName = Assembly.GetEntryAssembly()?.GetName().Name ??
@@ -21,7 +25,7 @@ public abstract class ModuleBase
     ///     Gets the version of the current module
     /// </summary>
     private readonly string _moduleVersion = Assembly.GetEntryAssembly()?
-        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0";
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "0.0.0";
 
     /// <summary>
     ///     Runs the module, reading input from stdin and writing output to stdout.
@@ -92,44 +96,6 @@ public abstract class ModuleBase
     }
 
     /// <summary>
-    ///     Creates a <see cref="CancellationTokenSource" /> that listens to shutdown signals
-    /// </summary>
-    /// <returns>A <see cref="CancellationTokenSource" /></returns>
-    public static CancellationTokenSource CreateShutdownTokenSource()
-    {
-        CancellationTokenSource cts = new();
-
-        // SIGTERM works on Unix-like platforms
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            PosixSignalRegistration.Create(PosixSignal.SIGTERM, ctx =>
-            {
-                ctx.Cancel = true;
-                cts.Cancel();
-            });
-        }
-
-        // SIGINT works everywhere
-        PosixSignalRegistration.Create(PosixSignal.SIGINT, ctx =>
-        {
-            ctx.Cancel = true;
-            cts.Cancel();
-        });
-
-        // Windows-specific Ctrl+Break
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            PosixSignalRegistration.Create(PosixSignal.SIGQUIT, ctx =>
-            {
-                ctx.Cancel = true;
-                cts.Cancel();
-            });
-        }
-
-        return cts;
-    }
-
-    /// <summary>
     ///     Executes the module-specific logic.
     ///     Override this method to implement your module's functionality.
     /// </summary>
@@ -183,12 +149,7 @@ public abstract class ModuleBase
         }
 
         string? str = obj.ToString();
-        if (!string.IsNullOrWhiteSpace(str))
-        {
-            return str;
-        }
-
-        return defaultValue;
+        return !string.IsNullOrWhiteSpace(str) ? str : defaultValue;
     }
 
     /// <summary>
@@ -224,7 +185,9 @@ public abstract class ModuleBase
             false,
             new Dictionary<string, object?>
             {
-                ["module_name"] = _moduleName, ["module_version"] = _moduleVersion, ["protocol_version"] = "1.0"
+                ["module_name"] = _moduleName,
+                ["module_version"] = _moduleVersion,
+                ["protocol_version"] = ProtocolVersion
             });
     }
 

@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/CLI/">
+    <Project Path="src/FulcrumLabs.Conductor.Agent.Cli/FulcrumLabs.Conductor.Agent.Cli.csproj" />
     <Project Path="src\FulcrumLabs.Conductor.Cli\FulcrumLabs.Conductor.Cli.csproj" />
   </Folder>
   <Folder Name="/Core/">
@@ -23,7 +24,10 @@
     <Project Path="modules\test\FulcrumLabs.Conductor.Modules.Shell.Tests\FulcrumLabs.Conductor.Modules.Shell.Tests.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+  	<File Path=".editorconfig" />
     <File Path=".github\workflows\build-and-publish.yml" />
+    <File Path=".gitignore" />
+    <File Path="build-cli.sh" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="LICENSE" />

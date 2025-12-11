@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <Description>Common interfaces and base classes for building Fulcrum.Conductor modules. Use this library to create custom automation modules compatible with the Conductor orchestration engine.</Description>
     <PackageId>FulcrumLabs.Conductor.Modules.Common</PackageId>
+    <!-- Suppress trim warnings - module base uses JSON serialization with dynamic data -->
+    <NoWarn>$(NoWarn);IL2026;IL2075;IL2067;IL2070</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

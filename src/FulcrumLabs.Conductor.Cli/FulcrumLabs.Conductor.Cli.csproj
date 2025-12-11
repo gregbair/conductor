@@ -6,6 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <AssemblyName>conductor</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Semver"/>
+    <PackageReference Include="Spectre.Console"/>
+    <PackageReference Include="Spectre.Console.Cli"/>
+    <PackageReference Include="SSH.NET"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FulcrumLabs.Conductor.Core\FulcrumLabs.Conductor.Core.csproj"/>
+  </ItemGroup>
 
 </Project>

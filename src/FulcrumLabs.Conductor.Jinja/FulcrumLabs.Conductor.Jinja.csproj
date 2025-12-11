@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
     <Description>Jinja2-compatible template engine for .NET with support for variables, filters, expressions, and control flow. Used by Fulcrum.Conductor for template expansion.</Description>
     <PackageId>FulcrumLabs.Conductor.Jinja</PackageId>
+    <!-- Disable trimming for this library - it uses reflection for template evaluation -->
+    <IsTrimmable>false</IsTrimmable>
+    <!-- Suppress trim warnings - this library requires dynamic types and reflection -->
+    <NoWarn>$(NoWarn);IL2026;IL2075;IL2067;IL2070</NoWarn>
   </PropertyGroup>
 
 </Project>
