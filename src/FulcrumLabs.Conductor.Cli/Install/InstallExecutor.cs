@@ -14,16 +14,9 @@ namespace FulcrumLabs.Conductor.Cli.Install;
 /// <summary>
 ///     Executes agent installation to a host
 /// </summary>
-public static class InstallExecutor
+public class InstallExecutor : BaseExecutor
 {
     private const string RemoteBundlePath = "bundle.tgz";
-
-    private static readonly JsonSerializerOptions JsonOpts = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-    };
-
-    private static readonly string AgentDir = Path.Combine("/opt", "conductor");
 
     /// <summary>
     ///     Executes the installation
@@ -33,7 +26,7 @@ public static class InstallExecutor
     /// <param name="sudoPassword">The sudo password to use</param>
     /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>An exit code (for now)</returns>
-    public static async Task<int> ExecuteInstallationAsync(string host, string username, string sudoPassword,
+    public async Task<int> ExecuteInstallationAsync(string host, string username, string sudoPassword,
         CancellationToken cancellationToken)
     {
         string hostDisplay = $"[bold yellow]({host})[/]";
@@ -65,7 +58,7 @@ public static class InstallExecutor
 
         // SSH to node, create /opt/conductor if not exists
         AnsiConsole.MarkupLine($"Verifying existence of {AgentDir} {hostDisplay}");
-        SshClient sshClient = CreateClient(host, username);
+        SshClient sshClient = CreateSshClient(host, username);
         await sshClient.ConnectAsync(cancellationToken);
 
         bool dirExists = AgentDirExists(sshClient);
@@ -149,42 +142,6 @@ public static class InstallExecutor
         client.RunCommand($"rm {RemoteBundlePath}");
     }
 
-    private static SshClient CreateClient(string host, string username)
-    {
-        PrivateKeyFile keyFile = new(GetKeyFilePath());
-        PrivateKeyAuthenticationMethod authMethod = new(username, keyFile);
-        return new SshClient(new ConnectionInfo(host, username, authMethod));
-    }
-
-    private static ScpClient CreateScpClient(string host, string username)
-    {
-        PrivateKeyFile keyFile = new(GetKeyFilePath());
-        PrivateKeyAuthenticationMethod authMethod = new(username, keyFile);
-        return new ScpClient(new ConnectionInfo(host, username, authMethod));
-    }
-
-    private static string GetKeyFilePath()
-    {
-        string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        string[] defaultKeys = [Path.Combine(home, ".ssh", "id_rsa"), Path.Combine(home, ".ssh", "id_ed25519")];
-
-        string keyPath = "";
-        foreach (string k in defaultKeys)
-        {
-            if (!File.Exists(k))
-            {
-                continue;
-            }
-
-            keyPath = k;
-            break;
-        }
-
-        return string.IsNullOrEmpty(keyPath)
-            ? throw new InvalidOperationException("Could not find private SSH key")
-            : keyPath;
-    }
-
     private static void CopyModules(ModuleRegistry moduleRegistry, string tempDir)
     {
         Directory.CreateDirectory(Path.Combine(tempDir, "bundle", "modules"));
@@ -222,37 +179,5 @@ public static class InstallExecutor
         }
 
         return Path.Combine(tempPath, fileName);
-    }
-
-    private static string ExecuteWithSudoAsync(SshClient client, string command, string sudoPassword)
-    {
-        // Use ShellStream to allocate a PTY for sudo password authentication
-        using ShellStream shell = client.CreateShellStream("xterm", 80, 24, 800, 600, 1024);
-
-        // Wait for initial prompt
-        shell.Expect(new System.Text.RegularExpressions.Regex(@"[$>]\s*$"), TimeSpan.FromSeconds(5));
-
-        // Send sudo command
-        shell.WriteLine($"sudo -S {command}");
-
-        // Wait for password prompt
-        shell.Expect(new System.Text.RegularExpressions.Regex(@"password.*:"), TimeSpan.FromSeconds(5));
-
-        // Send password
-        shell.WriteLine(sudoPassword);
-
-        // Wait for command to complete
-        System.Threading.Thread.Sleep(2000);
-
-        // Read output
-        string output = shell.Read();
-
-        // Check for authentication errors
-        if (output.Contains("Sorry, try again") || output.Contains("incorrect password"))
-        {
-            throw new InvalidOperationException("Sudo authentication failed");
-        }
-
-        return output;
     }
 }

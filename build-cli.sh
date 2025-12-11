@@ -53,6 +53,7 @@ PUBLISH_ARGS=(
   -p:EnableCompressionInSingleFile=true
   -p:DebugType=embedded
   -p:IncludeNativeLibrariesForSelfExtract=true
+  -p:GenerateDocumentationFile=false
 )
 
 # Publish CLI tools

@@ -13,12 +13,14 @@ public class InstallCommand : AsyncCommand<InstallCommandSettings>
         InstallCommandSettings settings,
         CancellationToken cancellationToken)
     {
-        // load and parse cfg file (YAML for now)
+        // TODO: load and parse cfg file (YAML for now)
+
+        InstallExecutor executor = new();
 
         // foreach host, run executor
         foreach (string host in settings.Hosts)
         {
-            await InstallExecutor.ExecuteInstallationAsync(host, settings.User ?? "", settings.SudoPassword ?? "",
+            await executor.ExecuteInstallationAsync(host, settings.User ?? "", settings.SudoPassword ?? "",
                 cancellationToken);
         }
 
