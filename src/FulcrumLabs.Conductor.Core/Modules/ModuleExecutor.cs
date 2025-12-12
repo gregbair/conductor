@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Text.Json;
 
+using Semver;
+
 namespace FulcrumLabs.Conductor.Core.Modules;
 
 /// <summary>
@@ -22,6 +24,7 @@ public class ModuleExecutor
         _defaultTimeout = defaultTimeout ?? TimeSpan.FromMinutes(5);
     }
 
+
     /// <summary>
     ///     Executes a module with the given parameters.
     /// </summary>
@@ -42,7 +45,7 @@ public class ModuleExecutor
         {
             throw new ModuleExecutionException("Cancellation requested");
         }
-        
+
         string? modulePath = _registry.GetModulePath(moduleName);
         if (modulePath == null)
         {
@@ -69,7 +72,7 @@ public class ModuleExecutor
         {
             throw new ModuleExecutionException("Cancellation requested");
         }
-        
+
         using Process? process = Process.Start(startInfo);
         if (process == null)
         {
@@ -142,4 +145,50 @@ public class ModuleExecutor
                 ex);
         }
     }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="moduleName"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<ModuleVersionInfo> GetModuleVersionAsync(
+        string moduleName,
+        CancellationToken cancellationToken = default)
+    {
+        Dictionary<string, object?> versionVars = new() { ["_conductor_cmd"] = "version" };
+
+        ModuleResult result = await ExecuteAsync(moduleName, versionVars, TimeSpan.FromSeconds(5), cancellationToken);
+
+        return !result.Success ? throw new ModuleExecutionException(result.Message) : ParseVersionInfo(result.Facts);
+    }
+
+    private static ModuleVersionInfo ParseVersionInfo(Dictionary<string, object?> vars)
+    {
+        if (!vars.TryGetValue("module_name", out object? moduleName)
+            || !vars.TryGetValue("module_version", out object? moduleVersion)
+            || !vars.TryGetValue("protocol_version", out object? protocolVersion))
+        {
+            throw new InvalidOperationException("Unable to parse module version");
+        }
+
+        string moduleNameStr = moduleName?.ToString() ??
+                               throw new InvalidOperationException("Unable to parse module version");
+        string moduleVersionStr = moduleVersion?.ToString() ??
+                                  throw new InvalidOperationException("Unable to parse module version");
+        string protocolVersionStr = protocolVersion?.ToString() ??
+                                    throw new InvalidOperationException("Unable to parse module version");
+
+        return new ModuleVersionInfo(
+            moduleNameStr,
+            SemVersion.Parse(moduleVersionStr),
+            SemVersion.Parse(protocolVersionStr));
+    }
 }
+
+/// <summary>
+///     Information about the version of a module
+/// </summary>
+/// <param name="ModuleName">The name of the module</param>
+/// <param name="ModuleVersion">The version of the module</param>
+/// <param name="ProtocolVersion">The protocol version of the module</param>
+public record ModuleVersionInfo(string ModuleName, SemVersion ModuleVersion, SemVersion ProtocolVersion);

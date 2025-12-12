@@ -1,0 +1,43 @@
+using Renci.SshNet;
+
+using Serilog;
+
+namespace FulcrumLabs.Conductor.Cli.Executor.Uninstall;
+
+/// <summary>
+///     Executor to uninstall the agent.
+/// </summary>
+public class UninstallExecutor : BaseExecutor
+{
+    /// <summary>
+    ///     Executes an uninstall on the given host
+    /// </summary>
+    /// <param name="host">The host to uninstall from</param>
+    /// <param name="username">The username to connect to the <paramref name="host" /></param>
+    /// <param name="sudoPassword">The sudo password to use</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <returns>An exit code (for now)</returns>
+    public async Task<int> ExecuteUninstall(string host, string username, string sudoPassword,
+        CancellationToken cancellationToken = default)
+    {
+        string hostColor = GetRandomColor();
+        string hostDisplay = $"[bold italic underline {hostColor}]({host}):[/]";
+
+        OutputLine($"{hostDisplay} Uninstalling agent in directory {AgentDir}...");
+
+        using SshClient sshClient = CreateSshClient(host, username);
+        try
+        {
+            await ConnectWithRetryAsync(sshClient, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error connecting to {host} via SSH. Exception: {ex}", host, ex);
+            return -1;
+        }
+
+        ExecuteWithSudoAsync(sshClient, $"rm -fr {AgentDir}", sudoPassword);
+        OutputLine($"{hostDisplay} Agent successfully uninstalled");
+        return 0;
+    }
+}

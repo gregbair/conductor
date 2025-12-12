@@ -1,3 +1,7 @@
+using System.Threading;
+
+using FulcrumLabs.Conductor.Core.Util;
 using FulcrumLabs.Conductor.Modules.Shell;
 
-return await new ShellModule().RunAsync();
+CancellationTokenSource cts = CancellationTokenSourceUtils.CreateProcessShutdownTokenSource();
+return await new ShellModule().RunAsync(cts.Token);

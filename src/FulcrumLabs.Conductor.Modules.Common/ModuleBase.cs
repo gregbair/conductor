@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 
 using FulcrumLabs.Conductor.Core.Modules;
@@ -9,6 +10,23 @@ namespace FulcrumLabs.Conductor.Modules.Common;
 /// </summary>
 public abstract class ModuleBase
 {
+    /// <summary>
+    ///     The version of the conductor protocol currently in use
+    /// </summary>
+    public const string ProtocolVersion = "0.1.0";
+
+    /// <summary>
+    ///     Gets the Name of the current module
+    /// </summary>
+    private readonly string _moduleName = Assembly.GetEntryAssembly()?.GetName().Name ??
+                                          throw new InvalidOperationException("Module name not defined!");
+
+    /// <summary>
+    ///     Gets the version of the current module
+    /// </summary>
+    private readonly string _moduleVersion = Assembly.GetEntryAssembly()?
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "0.0.0";
+
     /// <summary>
     ///     Runs the module, reading input from stdin and writing output to stdout.
     /// </summary>
@@ -44,8 +62,18 @@ public abstract class ModuleBase
                 return 1;
             }
 
-            // Execute the module-specific logic
-            ModuleResult result = await ExecuteAsync(input, cancellationToken);
+            ModuleResult result;
+            // Check for special commands
+            if (input.TryGetValue("_conductor_cmd", out object? cmd))
+            {
+                string? cmdString = cmd?.ToString();
+                result = ExecuteSpecialCommandAsync(cmdString, input, cancellationToken);
+            }
+            else
+            {
+                // Execute the module-specific logic
+                result = await ExecuteAsync(input, cancellationToken);
+            }
 
             // Output the result as JSON
             OutputResult(result);
@@ -59,6 +87,14 @@ public abstract class ModuleBase
         }
     }
 
+    private ModuleResult ExecuteSpecialCommandAsync(
+        string? commandName,
+        Dictionary<string, object?> input,
+        CancellationToken cancellationToken)
+    {
+        return commandName == "version" ? GetVersionInfo() : Failure($"Unknown command {commandName}", input);
+    }
+
     /// <summary>
     ///     Executes the module-specific logic.
     ///     Override this method to implement your module's functionality.
@@ -66,7 +102,8 @@ public abstract class ModuleBase
     /// <param name="vars">The input variables/parameters for the module.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The result of the module execution.</returns>
-    protected abstract Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars, CancellationToken cancellationToken = default);
+    protected abstract Task<ModuleResult> ExecuteAsync(Dictionary<string, object?> vars,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Helper method to get a required parameter from the <paramref name="vars" /> dictionary.
@@ -106,16 +143,13 @@ public abstract class ModuleBase
         string paramName,
         string defaultValue = "")
     {
-        if (vars.TryGetValue(paramName, out object? obj) && obj != null)
+        if (!vars.TryGetValue(paramName, out object? obj) || obj == null)
         {
-            string? str = obj.ToString();
-            if (!string.IsNullOrWhiteSpace(str))
-            {
-                return str;
-            }
+            return defaultValue;
         }
 
-        return defaultValue;
+        string? str = obj.ToString();
+        return !string.IsNullOrWhiteSpace(str) ? str : defaultValue;
     }
 
     /// <summary>
@@ -139,6 +173,22 @@ public abstract class ModuleBase
         {
             Success = false, Changed = false, Message = message, Facts = facts ?? new Dictionary<string, object?>()
         };
+    }
+
+    /// <summary>
+    ///     Creates a version result.
+    /// </summary>
+    protected virtual ModuleResult GetVersionInfo()
+    {
+        return Success(
+            $"{_moduleName} module version {_moduleVersion}",
+            false,
+            new Dictionary<string, object?>
+            {
+                ["module_name"] = _moduleName,
+                ["module_version"] = _moduleVersion,
+                ["protocol_version"] = ProtocolVersion
+            });
     }
 
     private static void OutputResult(ModuleResult result)

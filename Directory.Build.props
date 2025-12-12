@@ -25,7 +25,7 @@
   <!-- Version configuration -->
   <PropertyGroup>
     <!-- Default version - can be overridden by CI/CD -->
-    <Version Condition="'$(Version)' == ''">0.1.0-dev</Version>
+    <Version Condition="'$(Version)' == ''">0.3.0-dev</Version>
   </PropertyGroup>
 
   <!-- Package properties for packable projects -->
