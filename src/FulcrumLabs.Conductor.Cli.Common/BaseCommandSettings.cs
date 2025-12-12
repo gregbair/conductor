@@ -29,9 +29,10 @@ public abstract class BaseCommandSettings : CommandSettings
     {
         return Verbosity switch
         {
-            0 => LogEventLevel.Information, // Default
-            1 => LogEventLevel.Debug, // -v: Task results
-            _ => LogEventLevel.Verbose // -vv: Config info
+            0 => LogEventLevel.Information,
+            1 => LogEventLevel.Debug,
+            2 or 3 or 4 => LogEventLevel.Verbose, // we only have 3 levels, but keeping compatibility w/ Ansible
+            _ => LogEventLevel.Information
         };
     }
 

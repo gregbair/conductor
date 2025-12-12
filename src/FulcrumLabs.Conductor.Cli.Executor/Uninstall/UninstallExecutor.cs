@@ -1,7 +1,5 @@
 using Renci.SshNet;
 
-using Serilog.Core;
-
 namespace FulcrumLabs.Conductor.Cli.Executor.Uninstall;
 
 /// <summary>
@@ -9,14 +7,6 @@ namespace FulcrumLabs.Conductor.Cli.Executor.Uninstall;
 /// </summary>
 public class UninstallExecutor : BaseExecutor
 {
-    /// <summary>
-    ///     Initializes a new <see cref="UninstallExecutor" />
-    /// </summary>
-    /// <param name="consoleLogger">The console logger to use</param>
-    public UninstallExecutor(Logger consoleLogger) : base(consoleLogger)
-    {
-    }
-
     /// <summary>
     ///     Executes an uninstall on the given host
     /// </summary>
@@ -31,13 +21,13 @@ public class UninstallExecutor : BaseExecutor
         string hostColor = GetRandomColor();
         string hostDisplay = $"[bold italic underline {hostColor}]({host}):[/]";
 
-        OutputLineToConsoleAndFile($"{hostDisplay} Uninstalling agent in directory {AgentDir}...");
+        OutputLine($"{hostDisplay} Uninstalling agent in directory {AgentDir}...");
 
         using SshClient sshClient = CreateSshClient(host, username);
         await sshClient.ConnectAsync(cancellationToken);
 
         ExecuteWithSudoAsync(sshClient, $"rm -fr {AgentDir}", sudoPassword);
-        OutputLineToConsoleAndFile($"{hostDisplay} Agent successfully uninstalled");
+        OutputLine($"{hostDisplay} Agent successfully uninstalled");
         return 0;
     }
 }

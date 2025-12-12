@@ -1,12 +1,9 @@
-using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
 using Renci.SshNet;
 
 using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 
 using Spectre.Console;
 
@@ -31,64 +28,38 @@ public abstract class BaseExecutor
     protected static readonly string AgentDir = Path.Combine("/opt", "conductor");
 
     /// <summary>
-    ///     Initializes a new instance of <see cref="BaseExecutor" />
-    /// </summary>
-    /// <param name="consoleLogger">The logger for printing to console</param>
-    protected BaseExecutor(Logger consoleLogger)
-    {
-        ConsoleLogger = consoleLogger;
-    }
-
-    /// <summary>
-    ///     A file logger
-    /// </summary>
-    protected Logger FileLogger { get; } = CreateFileLogger();
-
-    /// <summary>
-    ///     The logger for printing to console
-    /// </summary>
-    protected Logger ConsoleLogger { get; init; }
-
-    /// <summary>
     ///     Outputs a line using <see cref="Rule" />
     /// </summary>
     /// <param name="text">The text to use as the title of the rule</param>
-    protected void OutputLineToConsoleAndFile(string text)
+    protected static void OutputLine(string text)
     {
-        using StringWriter stringWriter = new();
-        IAnsiConsole console =
-            AnsiConsole.Create(new AnsiConsoleSettings { Out = new AnsiConsoleOutput(stringWriter) });
+        AnsiConsole.MarkupLine(text);
+        LogPlainText(text);
+    }
 
-        using StringWriter fileLogWriter = new();
-        IAnsiConsole fileConsole =
-            AnsiConsole.Create(new AnsiConsoleSettings
-            {
-                Ansi = AnsiSupport.No,
-                ColorSystem = ColorSystemSupport.NoColors,
-                Out = new AnsiConsoleOutput(fileLogWriter)
-            });
+    /// <summary>
+    ///     Converts the marked-up <paramref name="text" /> to plaintext and logs it
+    /// </summary>
+    /// <param name="text">The marked-up text</param>
+    protected static void LogPlainText(string text)
+    {
+        using StringWriter writer = new();
+        IAnsiConsole console = AnsiConsole.Create(new AnsiConsoleSettings
+        {
+            Ansi = AnsiSupport.No, ColorSystem = ColorSystemSupport.NoColors, Out = new AnsiConsoleOutput(writer)
+        });
 
-        Rule rule = new(text) { Justification = Justify.Left };
-        rule.RuleStyle("yellow");
-
-        console.Write(rule);
-        fileConsole.Markup(text);
-
-        ConsoleLogger.Information(stringWriter.ToString());
-        FileLogger.Information(fileLogWriter.ToString());
+        console.Markup(text);
+        Log.Logger.Information(writer.ToString());
     }
 
     /// <summary>
     ///     Outputs a <see cref="Table" />
     /// </summary>
     /// <param name="table">The <see cref="Table" /> to render</param>
-    protected void OutputTableToConsole(Table table)
+    protected static void OutputTableToConsole(Table table)
     {
-        using StringWriter stringWriter = new();
-        IAnsiConsole console =
-            AnsiConsole.Create(new AnsiConsoleSettings { Out = new AnsiConsoleOutput(stringWriter) });
-        console.Write(table);
-        ConsoleLogger.Information(stringWriter.ToString());
+        AnsiConsole.Write(table);
     }
 
     /// <summary>
@@ -192,32 +163,5 @@ public abstract class BaseExecutor
         return string.IsNullOrEmpty(keyPath)
             ? throw new InvalidOperationException("Could not find private SSH key")
             : keyPath;
-    }
-
-    private static Logger CreateFileLogger()
-    {
-        string? assemblyName = Assembly.GetEntryAssembly()!.GetName().Name;
-
-        string conductorDir;
-
-        if (assemblyName!.Contains("conductor-agent"))
-        {
-            conductorDir = Path.Combine(".", "logs");
-        }
-        else
-        {
-            string userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            conductorDir = Path.Combine(userHome, ".conductor");
-        }
-
-        return new LoggerConfiguration()
-            .MinimumLevel.Is(LogEventLevel.Information)
-            .WriteTo.File(
-                Path.Combine(conductorDir, "conductor.log"),
-                LogEventLevel.Information,
-                fileSizeLimitBytes: 1000000,
-                rollOnFileSizeLimit: true,
-                retainedFileCountLimit: 3)
-            .CreateLogger();
     }
 }

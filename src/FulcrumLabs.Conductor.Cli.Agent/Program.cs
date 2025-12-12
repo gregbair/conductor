@@ -16,4 +16,4 @@ app.Configure(config =>
 
 CancellationTokenSource cts = CancellationTokenSourceUtils.CreateProcessShutdownTokenSource();
 
-return await app.RunAsync(args);
+return await app.RunAsync(args, cts.Token);

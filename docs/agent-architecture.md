@@ -99,7 +99,6 @@ sequenceDiagram
 1. **Pre-flight checks**
    - Test SSH connectivity to each host
    - Verify permissions (usually requires sudo)
-   - Check disk space at `/opt/conductor`
 
 2. **Package preparation**
    - Bundle `conductor-agent` executable
@@ -634,7 +633,6 @@ The version checking system is **fully backward compatible**:
 |----------------|----------|
 | SSH connection failed | Skip host, log error, continue with remaining hosts |
 | Insufficient permissions | Report error, suggest sudo usage |
-| Disk space insufficient | Report error, skip host |
 | Upload failed | Retry 3 times, then report error |
 | Version verification failed | Rollback, report error |
 
