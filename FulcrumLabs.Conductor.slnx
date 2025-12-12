@@ -1,8 +1,8 @@
 <Solution>
   <Folder Name="/CLI/">
-    <Project Path="src/FulcrumLabs.Conductor.Agent.Cli/FulcrumLabs.Conductor.Agent.Cli.csproj" />
     <Project Path="src/FulcrumLabs.Conductor.Cli.Common/FulcrumLabs.Conductor.Cli.Common.csproj" />
-    <Project Path="src\FulcrumLabs.Conductor.Cli\FulcrumLabs.Conductor.Cli.csproj" />
+    <Project Path="src\FulcrumLabs.Conductor.Cli.Agent\FulcrumLabs.Conductor.Cli.Agent.csproj" />
+    <Project Path="src\FulcrumLabs.Conductor.Cli.Executor\FulcrumLabs.Conductor.Cli.Executor.csproj" />
   </Folder>
   <Folder Name="/Core/">
     <Project Path="src\FulcrumLabs.Conductor.Core\FulcrumLabs.Conductor.Core.csproj" />

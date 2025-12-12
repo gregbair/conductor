@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace FulcrumLabs.Conductor.Agent.Cli.Version;
+namespace FulcrumLabs.Conductor.Cli.Agent.Version;
 
 /// <summary>
 ///     The Version object returned by the agent

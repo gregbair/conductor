@@ -1,4 +1,4 @@
-namespace FulcrumLabs.Conductor.Cli.Install;
+namespace FulcrumLabs.Conductor.Cli.Executor.Install;
 
 /// <summary>
 ///     Creates and removes a temp directory (OS-agnostic)

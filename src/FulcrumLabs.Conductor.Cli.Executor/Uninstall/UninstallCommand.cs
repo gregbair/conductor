@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 using Spectre.Console.Cli;
 
-namespace FulcrumLabs.Conductor.Cli.Uninstall;
+namespace FulcrumLabs.Conductor.Cli.Executor.Uninstall;
 
 /// <summary>
 ///     The command for uninstalling the agent

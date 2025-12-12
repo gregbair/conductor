@@ -4,12 +4,12 @@ using FulcrumLabs.Conductor.Cli.Common;
 
 using Spectre.Console.Cli;
 
-namespace FulcrumLabs.Conductor.Cli.Install;
+namespace FulcrumLabs.Conductor.Cli.Executor.Uninstall;
 
 /// <summary>
-///     Settings for the install command
+///     Configuration for uninstall operations
 /// </summary>
-public class InstallCommandSettings : BaseCommandSettings
+public class UninstallCommandSettings : BaseCommandSettings
 {
     /// <summary>
     ///     Gets or sets the host to run the install on
@@ -23,7 +23,7 @@ public class InstallCommandSettings : BaseCommandSettings
     /// </summary>
     [CommandOption("-p|--parallel <DEGREE>")]
     [Description("Specifies the degree of parallelism")]
-    public int Parallel { get; set; } = 5;
+    public int Parallel { get; set; } = 10;
 
     /// <summary>
     ///     Gets or sets the sudo password

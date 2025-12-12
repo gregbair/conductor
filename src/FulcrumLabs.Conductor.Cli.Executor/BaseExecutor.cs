@@ -10,7 +10,7 @@ using Serilog.Events;
 
 using Spectre.Console;
 
-namespace FulcrumLabs.Conductor.Cli;
+namespace FulcrumLabs.Conductor.Cli.Executor;
 
 /// <summary>
 ///     Base for all executor classes

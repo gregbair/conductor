@@ -11,7 +11,7 @@ using Serilog.Core;
 
 using Spectre.Console;
 
-namespace FulcrumLabs.Conductor.Cli.Install;
+namespace FulcrumLabs.Conductor.Cli.Executor.Install;
 
 /// <summary>
 ///     Executes agent installation to a host

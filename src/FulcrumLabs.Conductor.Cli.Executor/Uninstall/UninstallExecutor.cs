@@ -2,7 +2,7 @@ using Renci.SshNet;
 
 using Serilog.Core;
 
-namespace FulcrumLabs.Conductor.Cli.Uninstall;
+namespace FulcrumLabs.Conductor.Cli.Executor.Uninstall;
 
 /// <summary>
 ///     Executor to uninstall the agent.

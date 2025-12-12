@@ -7,7 +7,7 @@ using FulcrumLabs.Conductor.Core.Modules;
 
 using Spectre.Console.Cli;
 
-namespace FulcrumLabs.Conductor.Agent.Cli.Version;
+namespace FulcrumLabs.Conductor.Cli.Agent.Version;
 
 /// <summary>
 ///     Runs the 'version' command

@@ -2,7 +2,7 @@
 
 using System.Threading;
 
-using FulcrumLabs.Conductor.Agent.Cli.Version;
+using FulcrumLabs.Conductor.Cli.Agent.Version;
 using FulcrumLabs.Conductor.Core.Util;
 
 using Spectre.Console.Cli;

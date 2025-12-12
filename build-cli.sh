@@ -58,12 +58,12 @@ PUBLISH_ARGS=(
 
 # Publish CLI tools
 echo "Publishing conductor CLI..."
-dotnet publish "$REPO_ROOT/src/FulcrumLabs.Conductor.Cli/FulcrumLabs.Conductor.Cli.csproj" \
+dotnet publish "$REPO_ROOT/src/FulcrumLabs.Conductor.Cli/FulcrumLabs.Conductor.Cli.Executor.csproj" \
     "${PUBLISH_ARGS[@]}" \
     -o "$OUTPUT_DIR"
 
 echo "Publishing conductor-agent CLI..."
-dotnet publish "$REPO_ROOT/src/FulcrumLabs.Conductor.Agent.Cli/FulcrumLabs.Conductor.Agent.Cli.csproj" \
+dotnet publish "$REPO_ROOT/src/FulcrumLabs.Conductor.Agent.Cli/FulcrumLabs.Conductor.Cli.Agent.csproj" \
     "${PUBLISH_ARGS[@]}" \
     -o "$OUTPUT_DIR"
 

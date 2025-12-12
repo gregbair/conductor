@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 using Spectre.Console.Cli;
 
-namespace FulcrumLabs.Conductor.Cli.Install;
+namespace FulcrumLabs.Conductor.Cli.Executor.Install;
 
 /// <summary>
 ///     Command to install an agent
