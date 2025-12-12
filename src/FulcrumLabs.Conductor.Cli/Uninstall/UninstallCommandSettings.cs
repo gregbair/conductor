@@ -1,5 +1,7 @@
 using System.ComponentModel;
 
+using FulcrumLabs.Conductor.Cli.Common;
+
 using Spectre.Console.Cli;
 
 namespace FulcrumLabs.Conductor.Cli.Uninstall;
@@ -7,7 +9,7 @@ namespace FulcrumLabs.Conductor.Cli.Uninstall;
 /// <summary>
 ///     Configuration for uninstall operations
 /// </summary>
-public class UninstallCommandSettings : CommandSettings
+public class UninstallCommandSettings : BaseCommandSettings
 {
     /// <summary>
     ///     Gets or sets the host to run the install on

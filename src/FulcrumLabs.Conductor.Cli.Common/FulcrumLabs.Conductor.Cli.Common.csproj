@@ -1,25 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-    <AssemblyName>conductor</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Semver"/>
-    <PackageReference Include="Serilog"/>
-    <PackageReference Include="Serilog.Sinks.Console"/>
-    <PackageReference Include="Spectre.Console"/>
-    <PackageReference Include="Spectre.Console.Cli"/>
-    <PackageReference Include="SSH.NET"/>
+    <ProjectReference Include="..\FulcrumLabs.Conductor.Core\FulcrumLabs.Conductor.Core.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FulcrumLabs.Conductor.Cli.Common\FulcrumLabs.Conductor.Cli.Common.csproj"/>
+    <PackageReference Include="Serilog"/>
+    <PackageReference Include="Serilog.Sinks.Console"/>
+    <PackageReference Include="Serilog.Sinks.File"/>
+    <PackageReference Include="Spectre.Console"/>
+    <PackageReference Include="Spectre.Console.Cli"/>
   </ItemGroup>
 
 </Project>

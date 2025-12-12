@@ -7,6 +7,8 @@ using FulcrumLabs.Conductor.Core.Modules;
 
 using Renci.SshNet;
 
+using Serilog.Core;
+
 using Spectre.Console;
 
 namespace FulcrumLabs.Conductor.Cli.Install;
@@ -17,6 +19,12 @@ namespace FulcrumLabs.Conductor.Cli.Install;
 public class InstallExecutor : BaseExecutor
 {
     private const string RemoteBundlePath = "bundle.tgz";
+
+    /// <summary>
+    ///     Initializes a new instance of <see cref="InstallExecutor" />
+    /// </summary>
+    /// <param name="consoleLogger"></param>
+    public InstallExecutor(Logger consoleLogger) : base(consoleLogger) { }
 
     /// <summary>
     ///     Executes the installation
@@ -33,9 +41,13 @@ public class InstallExecutor : BaseExecutor
         string hostDisplay = $"[bold italic underline {hostColor}]({host}):[/]";
         using TempDirectory tempDir = new("conductor-agent-");
         // Find all modules
-        OutputLine($"{hostDisplay} Finding all modules");
+
+
+        OutputLineToConsoleAndFile($"{hostDisplay} Finding all modules");
         ModuleRegistry registry = new();
         registry.DiscoverModulesFromStandardPaths();
+
+        OutputLineToConsoleAndFile($"{hostDisplay} Modules found:");
 
         Table modTable = new();
         modTable.AddColumn("Name");
@@ -43,29 +55,39 @@ public class InstallExecutor : BaseExecutor
 
         foreach (string name in registry.GetModuleNames())
         {
-            modTable.AddRow($"[blue]{name}[/]", $"[green]{registry.GetModulePath(name)}[/]");
+            string? path = registry.GetModulePath(name);
+            modTable.AddRow($"[blue]{name}[/]", $"[green]{path}[/]");
+            FileLogger.Information("({host}): Module {name} found at {path}", host, name, path);
         }
 
-        OutputLine($"{hostDisplay} Modules found:");
-        AnsiConsole.Write(modTable);
+        OutputTableToConsole(modTable);
 
         // Package modules + agent
-        OutputLine($"{hostDisplay} Packing agent and modules...");
+        OutputLineToConsoleAndFile($"{hostDisplay} Packing agent and modules...");
         CopyModules(registry, tempDir.Path);
         string bundlePath = await CreateBundle(tempDir.Path, Path.Combine(tempDir.Path, "bundle"), cancellationToken);
         string bundleOutput = $"{hostDisplay} Bundle packed successfully - {bundlePath}";
-        OutputLine(bundleOutput);
+        OutputLineToConsoleAndFile(bundleOutput);
 
         // SSH to node, create /opt/conductor if not exists
-        OutputLine($"{hostDisplay} Verifying existence of {AgentDir}");
+        OutputLineToConsoleAndFile($"{hostDisplay} Verifying existence of {AgentDir}");
         SshClient sshClient = CreateSshClient(host, username);
-        await sshClient.ConnectAsync(cancellationToken);
+        try
+        {
+            await sshClient.ConnectAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            //AnsiConsole.WriteException(ex);
+            ConsoleLogger.Error("Error connecting to {host} via ssh. Exception: {ex}", host, ex);
+            return -1;
+        }
 
         bool dirExists = AgentDirExists(sshClient);
 
         if (!dirExists)
         {
-            OutputLine($"{hostDisplay} {AgentDir} doesn't exist, creating...");
+            OutputLineToConsoleAndFile($"{hostDisplay} {AgentDir} doesn't exist, creating...");
             CreateAgentDir(sshClient, sudoPassword);
             dirExists = AgentDirExists(sshClient);
             if (!dirExists)
@@ -74,31 +96,39 @@ public class InstallExecutor : BaseExecutor
                 return -1;
             }
 
-            OutputLine($"{hostDisplay} {AgentDir} created");
+            OutputLineToConsoleAndFile($"{hostDisplay} {AgentDir} created");
         }
         else
         {
-            OutputLine($"{hostDisplay} {AgentDir} exists");
+            OutputLineToConsoleAndFile($"{hostDisplay} {AgentDir} exists");
         }
 
 
         // SCP over bundle
         using ScpClient scpClient = CreateScpClient(host, username);
-        await scpClient.ConnectAsync(cancellationToken);
+        try
+        {
+            await scpClient.ConnectAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.WriteException(ex);
+            return -1;
+        }
 
-        OutputLine($"{hostDisplay} Copying bundle over to managed node...");
+        OutputLineToConsoleAndFile($"{hostDisplay} Copying bundle over to managed node...");
         CopyFileOverToRemoteHost(scpClient, bundlePath);
-        OutputLine($"{hostDisplay} Bundle copied over to managed node");
+        OutputLineToConsoleAndFile($"{hostDisplay} Bundle copied over to managed node");
 
         // Use SSH connection to unpack bundle
-        OutputLine($"{hostDisplay} Unpacking and installing bundle...");
+        OutputLineToConsoleAndFile($"{hostDisplay} Unpacking and installing bundle...");
         UnpackAndCopyBundle(sshClient, sudoPassword);
-        OutputLine($"{hostDisplay} Bundle installed");
+        OutputLineToConsoleAndFile($"{hostDisplay} Bundle installed");
 
         // check version of agent
-        OutputLine($"{hostDisplay} Verifying installation...");
+        OutputLineToConsoleAndFile($"{hostDisplay} Verifying installation...");
         VersionResult? version = GetAgentVersion(sshClient);
-        OutputLine($"{hostDisplay} Verified  version {version?.AgentVersion ?? "(no version found)"}");
+        OutputLineToConsoleAndFile($"{hostDisplay} Verified  version {version?.AgentVersion ?? "(no version found)"}");
 
         return version == null ? -1 : 0;
     }

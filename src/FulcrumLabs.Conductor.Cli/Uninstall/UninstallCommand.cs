@@ -15,7 +15,7 @@ public class UninstallCommand : AsyncCommand<UninstallCommandSettings>
         UninstallCommandSettings settings,
         CancellationToken cancellationToken)
     {
-        UninstallExecutor executor = new();
+        UninstallExecutor executor = new(settings.CreateConsoleLogger());
 
         ConcurrentBag<int> results = [];
         await Parallel.ForEachAsync(settings.Hosts, cancellationToken, async (host, token) =>

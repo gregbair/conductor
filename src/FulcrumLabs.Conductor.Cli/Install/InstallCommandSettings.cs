@@ -1,5 +1,7 @@
 using System.ComponentModel;
 
+using FulcrumLabs.Conductor.Cli.Common;
+
 using Spectre.Console.Cli;
 
 namespace FulcrumLabs.Conductor.Cli.Install;
@@ -7,7 +9,7 @@ namespace FulcrumLabs.Conductor.Cli.Install;
 /// <summary>
 ///     Settings for the install command
 /// </summary>
-public class InstallCommandSettings : CommandSettings
+public class InstallCommandSettings : BaseCommandSettings
 {
     /// <summary>
     ///     Gets or sets the host to run the install on
@@ -21,7 +23,7 @@ public class InstallCommandSettings : CommandSettings
     /// </summary>
     [CommandOption("-p|--parallel <DEGREE>")]
     [Description("Specifies the degree of parallelism")]
-    public int Parallel { get; set; } = 10;
+    public int Parallel { get; set; } = 5;
 
     /// <summary>
     ///     Gets or sets the sudo password

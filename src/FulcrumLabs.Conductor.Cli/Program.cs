@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using FulcrumLabs.Conductor.Cli.Common;
 using FulcrumLabs.Conductor.Cli.Install;
 using FulcrumLabs.Conductor.Cli.Uninstall;
 using FulcrumLabs.Conductor.Core.Util;
@@ -10,6 +11,7 @@ CommandApp app = new();
 
 app.Configure(config =>
 {
+    config.SetInterceptor(new VerbosityInterceptor());
     config.AddCommand<InstallCommand>("install");
     config.AddCommand<UninstallCommand>("uninstall");
 });

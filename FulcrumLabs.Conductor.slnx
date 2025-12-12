@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/CLI/">
     <Project Path="src/FulcrumLabs.Conductor.Agent.Cli/FulcrumLabs.Conductor.Agent.Cli.csproj" />
+    <Project Path="src/FulcrumLabs.Conductor.Cli.Common/FulcrumLabs.Conductor.Cli.Common.csproj" />
     <Project Path="src\FulcrumLabs.Conductor.Cli\FulcrumLabs.Conductor.Cli.csproj" />
   </Folder>
   <Folder Name="/Core/">

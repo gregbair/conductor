@@ -17,7 +17,7 @@ public class InstallCommand : AsyncCommand<InstallCommandSettings>
     {
         // TODO: load and parse cfg file (YAML for now)
 
-        InstallExecutor executor = new();
+        InstallExecutor executor = new(settings.CreateConsoleLogger());
 
         ConcurrentBag<int> results = [];
         // foreach host, run executor

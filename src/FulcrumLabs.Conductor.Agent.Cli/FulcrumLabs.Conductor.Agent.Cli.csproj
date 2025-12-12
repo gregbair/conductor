@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FulcrumLabs.Conductor.Core\FulcrumLabs.Conductor.Core.csproj" />
+    <ProjectReference Include="..\FulcrumLabs.Conductor.Cli.Common\FulcrumLabs.Conductor.Cli.Common.csproj"/>
   </ItemGroup>
 
 </Project>
