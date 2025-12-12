@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Production Dependencies -->
+    <PackageVersion Include="Polly" Version="8.5.0"/>
     <PackageVersion Include="Semver" Version="3.0.0"/>
     <PackageVersion Include="Serilog" Version="4.3.0"/>
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1"/>

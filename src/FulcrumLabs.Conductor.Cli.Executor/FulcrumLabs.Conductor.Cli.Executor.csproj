@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Polly"/>
     <PackageReference Include="Semver"/>
     <PackageReference Include="Serilog"/>
     <PackageReference Include="Serilog.Sinks.Console"/>

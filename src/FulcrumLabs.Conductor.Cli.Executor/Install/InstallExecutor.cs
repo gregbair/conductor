@@ -68,11 +68,11 @@ public class InstallExecutor : BaseExecutor
         using SshClient sshClient = CreateSshClient(host, username);
         try
         {
-            await sshClient.ConnectAsync(cancellationToken);
+            await ConnectWithRetryAsync(sshClient, cancellationToken);
         }
         catch (Exception ex)
         {
-            Log.Logger.Error("Error connecting to {host} via ssh. Exception: {ex}", host, ex);
+            Log.Logger.Error("Error connecting to {host} via SSH. Exception: {ex}", host, ex);
             return -1;
         }
 
@@ -102,11 +102,11 @@ public class InstallExecutor : BaseExecutor
         using ScpClient scpClient = CreateScpClient(host, username);
         try
         {
-            await scpClient.ConnectAsync(cancellationToken);
+            await ConnectWithRetryAsync(scpClient, cancellationToken);
         }
         catch (Exception ex)
         {
-            Log.Logger.Error("Error connecting to {host} via ssh. Exception: {ex}", host, ex);
+            Log.Logger.Error("Error connecting to {host} via SCP. Exception: {ex}", host, ex);
             return -1;
         }
 

@@ -1,7 +1,12 @@
+using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
+using Polly;
+using Polly.Retry;
+
 using Renci.SshNet;
+using Renci.SshNet.Common;
 
 using Serilog;
 
@@ -26,6 +31,29 @@ public abstract class BaseExecutor
     ///     The directory in which the agent is.
     /// </summary>
     protected static readonly string AgentDir = Path.Combine("/opt", "conductor");
+
+    /// <summary>
+    ///     Retry policy for SSH/SCP connections with exponential backoff
+    /// </summary>
+    private static readonly ResiliencePipeline SshRetryPolicy = new ResiliencePipelineBuilder()
+        .AddRetry(new RetryStrategyOptions
+        {
+            MaxRetryAttempts = 3,
+            Delay = TimeSpan.FromSeconds(1),
+            BackoffType = DelayBackoffType.Exponential,
+            UseJitter = true,
+            ShouldHandle = new PredicateBuilder().Handle<SocketException>().Handle<SshConnectionException>(),
+            OnRetry = args =>
+            {
+                Log.Logger.Warning(
+                    "SSH connection attempt {Attempt} failed: {Exception}. Retrying in {Delay}...",
+                    args.AttemptNumber + 1,
+                    args.Outcome.Exception?.Message,
+                    args.RetryDelay);
+                return ValueTask.CompletedTask;
+            }
+        })
+        .Build();
 
     /// <summary>
     ///     Outputs a line using <see cref="Rule" />
@@ -87,9 +115,6 @@ public abstract class BaseExecutor
         // Send password
         shell.WriteLine(sudoPassword);
 
-        // Wait for command to complete
-        Thread.Sleep(2000);
-
         // Read output
         string output = shell.Read();
 
@@ -126,6 +151,32 @@ public abstract class BaseExecutor
         PrivateKeyFile keyFile = new(GetKeyFilePath());
         PrivateKeyAuthenticationMethod authMethod = new(username, keyFile);
         return new ScpClient(new ConnectionInfo(host, username, authMethod));
+    }
+
+    /// <summary>
+    ///     Connects an SSH client with retry policy
+    /// </summary>
+    /// <param name="client">The <see cref="SshClient" /> to connect</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    protected static async Task ConnectWithRetryAsync(SshClient client, CancellationToken cancellationToken)
+    {
+        await SshRetryPolicy.ExecuteAsync(async ct =>
+        {
+            await client.ConnectAsync(ct);
+        }, cancellationToken);
+    }
+
+    /// <summary>
+    ///     Connects an SCP client with retry policy
+    /// </summary>
+    /// <param name="client">The <see cref="ScpClient" /> to connect</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    protected static async Task ConnectWithRetryAsync(ScpClient client, CancellationToken cancellationToken)
+    {
+        await SshRetryPolicy.ExecuteAsync(async ct =>
+        {
+            await client.ConnectAsync(ct);
+        }, cancellationToken);
     }
 
     /// <summary>

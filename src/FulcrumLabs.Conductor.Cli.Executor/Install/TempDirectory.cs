@@ -28,5 +28,7 @@ public class TempDirectory : IDisposable
         {
             Directory.Delete(Path, true);
         }
+
+        GC.SuppressFinalize(this);
     }
 }

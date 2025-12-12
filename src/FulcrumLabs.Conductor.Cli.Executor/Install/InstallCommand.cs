@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
 
+using Serilog;
+
 using Spectre.Console.Cli;
 
 namespace FulcrumLabs.Conductor.Cli.Executor.Install;
@@ -17,17 +19,25 @@ public class InstallCommand : AsyncCommand<InstallCommandSettings>
     {
         // TODO: load and parse cfg file (YAML for now)
 
+        if (settings.User == null)
+        {
+            Log.Error("User not specified.");
+            return -1;
+        }
+
         InstallExecutor executor = new();
 
         ConcurrentBag<int> results = [];
         // foreach host, run executor
-        await Parallel.ForEachAsync(settings.Hosts, cancellationToken, async (host, token) =>
-        {
-            int result = await executor.ExecuteInstallationAsync(host, settings.User ?? "", settings.SudoPassword ?? "",
-                token);
+        await Parallel.ForEachAsync(settings.Hosts, new ParallelOptions { MaxDegreeOfParallelism = settings.Parallel },
+            async (host, token) =>
+            {
+                int result = await executor.ExecuteInstallationAsync(host, settings.User ?? "",
+                    settings.SudoPassword ?? "",
+                    token);
 
-            results.Add(result);
-        });
+                results.Add(result);
+            });
 
         int result = results.Any(x => x != 0) ? 1 : 0;
 
